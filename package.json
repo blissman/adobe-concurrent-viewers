@@ -1,0 +1,24 @@
+{
+  "name": "gulpkarma",
+  "version": "1.0.0",
+  "description": "a starter repository for setting up gulp and karma",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blissman/gulpkarma.git"
+  },
+  "keywords": [
+    "gulp",
+    "karma",
+    "testing"
+  ],
+  "author": "Bliss Man",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/blissman/gulpkarma/issues"
+  },
+  "homepage": "https://github.com/blissman/gulpkarma#readme"
+}
