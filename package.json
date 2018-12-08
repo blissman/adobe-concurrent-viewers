@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/blissman/gulpkarma/issues"
   },
-  "homepage": "https://github.com/blissman/gulpkarma#readme"
+  "homepage": "https://github.com/blissman/gulpkarma#readme",
+  "devDependencies": {
+    "gulp": "^4.0.0"
+  }
 }
