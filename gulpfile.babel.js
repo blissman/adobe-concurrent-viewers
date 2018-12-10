@@ -32,9 +32,4 @@ gulp.task('lint', function() {
         .pipe(eslint.failOnError());
 });
 
-function defaultTask(cb) {
-    // place code for your default task here
-    cb();
-}
-
-exports.default = defaultTask
+gulp.task('default', gulp.series('lint', 'test'));
