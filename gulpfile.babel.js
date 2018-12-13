@@ -52,13 +52,13 @@ gulp.task('test', function(done) {
     new Server({
         configFile: __dirname + '/karma.conf.js',
         singleRun: true
-    }, done).start();
+    }, done()).start();
 });
 
 gulp.task('tdd', function(done) {
     new Server({
         configFile: __dirname + '/karma.conf.js'
-    }, done).start();
+    }, done()).start();
 });
 
 /*
