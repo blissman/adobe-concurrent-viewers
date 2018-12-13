@@ -12,7 +12,7 @@ Install [Homebrew](https://brew.sh/) if you're on macOS (it'll make the followin
 
 ### Node.js
 
-You'll need to install [Node.js](https://nodejs.org/en/) (instructions on site). If you're on macOS, you can do this by typing into your terminal:
+You'll need to install [Node.js](https://nodejs.org/en/) (instructions on site). If you're on macOS and have Homebrew installed, you can do this by typing into your terminal:
 
 ```bash
 brew install node
