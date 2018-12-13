@@ -25,5 +25,5 @@ You'll also need to install [Gulp.js](https://gulpjs.com/) (instructions on site
 ## Install Instructions
 
 1. clone this repo
-2. at your terminal, type `$ npm install`
-3. run your default build process with `$ gulp`
+2. at your terminal, type: `$ npm install`
+3. run your default build process with: `$ gulp`
