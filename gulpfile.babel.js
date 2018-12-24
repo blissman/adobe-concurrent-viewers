@@ -1,5 +1,7 @@
 const gulp = require('gulp');
 const Server = require('karma').Server;
+const uglify = require('gulp-uglify');
+const pump = require('pump');
 const eslint = require('gulp-eslint');
 const eslintConfig = {
     "env": {
@@ -29,8 +31,7 @@ const eslintConfig = {
         ],
         "no-console": 0, // allow console.log etc
         "no-extra-boolean-cast": 0, // allow using !! to cast to boolean
-        "no-unused-vars":
-            ["error",
+        "no-unused-vars": ["error",
             {
                 "vars": "all", // no unused variables in any scope
                 // allow trailing unused args since functions may be called with
@@ -71,4 +72,18 @@ gulp.task('lint', function() {
         .pipe(eslint.failOnError());
 });
 
-gulp.task('default', gulp.series('lint', 'test'));
+/*
+    gulp-uglify task
+*/
+gulp.task('uglify', function(callback) {
+    pump([
+            gulp.src('src/*.js'),
+            uglify(),
+            gulp.dest('dist')
+        ],
+        callback
+    );
+});
+
+
+gulp.task('default', gulp.series('lint', 'test', 'uglify'));
