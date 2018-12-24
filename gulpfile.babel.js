@@ -1,7 +1,13 @@
+// gulp
 const gulp = require('gulp');
+// karma
 const Server = require('karma').Server;
+// uglify
 const uglify = require('gulp-uglify');
 const pump = require('pump');
+// babel
+const babel = require('gulp-babel');
+// eslint
 const eslint = require('gulp-eslint');
 const eslintConfig = {
     "env": {
@@ -77,7 +83,7 @@ gulp.task('lint', function() {
 */
 gulp.task('uglify', function(callback) {
     pump([
-            gulp.src('src/*.js'),
+            gulp.src('dist/*.js'),
             uglify(),
             gulp.dest('dist')
         ],
@@ -85,5 +91,16 @@ gulp.task('uglify', function(callback) {
     );
 });
 
+/*
+    gulp-babel task
+*/
+gulp.task('babel', () =>
+    gulp.src('src/*.js')
+        .pipe(babel({
+            presets: ['@babel/env']
+        }))
+        .pipe(gulp.dest('dist'))
+);
 
-gulp.task('default', gulp.series('lint', 'test', 'uglify'));
+
+gulp.task('default', gulp.series('lint', 'babel', 'uglify', 'test'));
