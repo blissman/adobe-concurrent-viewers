@@ -7,6 +7,8 @@ const uglify = require('gulp-uglify');
 const pump = require('pump');
 // minify (css)
 const cleanCSS = require('gulp-clean-css');
+// minify (html)
+const htmlmin = require('gulp-htmlmin');
 // babel
 const babel = require('gulp-babel');
 // eslint
@@ -87,7 +89,7 @@ gulp.task('uglify-js', function(callback) {
     pump([
             gulp.src('dist/*.js'),
             uglify(),
-            gulp.dest('dist/js')
+            gulp.dest('dist')
         ],
         callback
     );
@@ -106,6 +108,17 @@ gulp.task('minify-css', () => {
 });
 
 /*
+    gulp minify (html) task
+*/
+gulp.task('minify-html', () => {
+    return gulp.src('src/*.html')
+        .pipe(htmlmin({
+            collapseWhitespace: true
+        }))
+        .pipe(gulp.dest('dist'));
+});
+
+/*
     gulp-babel task
 */
 gulp.task('babel', () =>
@@ -117,4 +130,4 @@ gulp.task('babel', () =>
 );
 
 
-gulp.task('default', gulp.series('lint', 'babel', gulp.parallel('uglify-js', 'minify-css'), 'test'));
+gulp.task('default', gulp.series('lint', 'babel', gulp.parallel('uglify-js', 'minify-css', 'minify-html'), 'test'));
