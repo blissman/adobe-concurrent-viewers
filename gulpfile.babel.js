@@ -2,9 +2,15 @@
 const gulp = require('gulp');
 // karma
 const Server = require('karma').Server;
-// uglify
+// uglify (js)
 const uglify = require('gulp-uglify');
 const pump = require('pump');
+// minify (css)
+const cleanCSS = require('gulp-clean-css');
+// minify (html)
+const htmlmin = require('gulp-htmlmin');
+// minify (images)
+const imagemin = require('gulp-imagemin');
 // babel
 const babel = require('gulp-babel');
 // eslint
@@ -79,9 +85,9 @@ gulp.task('lint', function() {
 });
 
 /*
-    gulp-uglify task
+    gulp-uglify (js) task
 */
-gulp.task('uglify', function(callback) {
+gulp.task('uglify-js', function(callback) {
     pump([
             gulp.src('dist/*.js'),
             uglify(),
@@ -92,15 +98,66 @@ gulp.task('uglify', function(callback) {
 });
 
 /*
+    gulp minify (css) task
+*/
+gulp.task('minify-css', () => {
+    return gulp.src('src/styles/*.css')
+        .pipe(cleanCSS({
+            compatibility: '*',
+            level: 2
+        }))
+        .pipe(gulp.dest('dist/styles'));
+});
+
+/*
+    gulp minify (html) task
+*/
+gulp.task('minify-html', () => {
+    return gulp.src('src/*.html')
+        .pipe(htmlmin({
+            collapseWhitespace: true
+        }))
+        .pipe(gulp.dest('dist'));
+});
+
+/*
+    gulp minify (images) task
+*/
+gulp.task('minify-images', () =>
+    gulp.src('src/images/*')
+    .pipe(imagemin([
+        imagemin.gifsicle({
+            interlaced: true
+        }),
+        imagemin.jpegtran({
+            progressive: true
+        }),
+        imagemin.optipng({
+            optimizationLevel: 5
+        }),
+        imagemin.svgo({
+            plugins: [{
+                    removeViewBox: true
+                },
+                {
+                    cleanupIDs: false
+                }
+            ]
+        })
+    ]))
+    .pipe(gulp.dest('dist/images'))
+);
+
+/*
     gulp-babel task
 */
 gulp.task('babel', () =>
     gulp.src('src/*.js')
-        .pipe(babel({
-            presets: ['@babel/env']
-        }))
-        .pipe(gulp.dest('dist'))
+    .pipe(babel({
+        presets: ['@babel/env']
+    }))
+    .pipe(gulp.dest('dist'))
 );
 
 
-gulp.task('default', gulp.series('lint', 'babel', 'uglify', 'test'));
+gulp.task('default', gulp.series('lint', 'babel', gulp.parallel('uglify-js', 'minify-css', 'minify-html', 'minify-images'), 'test'));
