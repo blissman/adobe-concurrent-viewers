@@ -78,7 +78,7 @@ gulp.task('tdd', function(done) {
     ESLint task
 */
 gulp.task('lint', function() {
-    return gulp.src('src/**').pipe(eslint(eslintConfig))
+    return gulp.src('src/*.js').pipe(eslint(eslintConfig))
         .pipe(eslint.format())
         // Brick on failure to be super strict
         .pipe(eslint.failOnError());
