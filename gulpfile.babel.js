@@ -2,9 +2,11 @@
 const gulp = require('gulp');
 // karma
 const Server = require('karma').Server;
-// uglify
+// uglify (js)
 const uglify = require('gulp-uglify');
 const pump = require('pump');
+// minify (css)
+const cleanCSS = require('gulp-clean-css');
 // babel
 const babel = require('gulp-babel');
 // eslint
@@ -79,16 +81,28 @@ gulp.task('lint', function() {
 });
 
 /*
-    gulp-uglify task
+    gulp-uglify (js) task
 */
-gulp.task('uglify', function(callback) {
+gulp.task('uglify-js', function(callback) {
     pump([
             gulp.src('dist/*.js'),
             uglify(),
-            gulp.dest('dist')
+            gulp.dest('dist/js')
         ],
         callback
     );
+});
+
+/*
+    gulp minify (css) task
+*/
+gulp.task('minify-css', () => {
+    return gulp.src('styles/*.css')
+        .pipe(cleanCSS({
+            compatibility: '*',
+            level: 2
+        }))
+        .pipe(gulp.dest('dist/styles'));
 });
 
 /*
@@ -96,11 +110,11 @@ gulp.task('uglify', function(callback) {
 */
 gulp.task('babel', () =>
     gulp.src('src/*.js')
-        .pipe(babel({
-            presets: ['@babel/env']
-        }))
-        .pipe(gulp.dest('dist'))
+    .pipe(babel({
+        presets: ['@babel/env']
+    }))
+    .pipe(gulp.dest('dist'))
 );
 
 
-gulp.task('default', gulp.series('lint', 'babel', 'uglify', 'test'));
+gulp.task('default', gulp.series('lint', 'babel', gulp.parallel('uglify-js', 'minify-css'), 'test'));

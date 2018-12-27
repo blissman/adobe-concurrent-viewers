@@ -27,6 +27,7 @@
     "@babel/register": "^7.0.0",
     "gulp": "^4.0.0",
     "gulp-babel": "^8.0.0",
+    "gulp-clean-css": "^4.0.0",
     "gulp-eslint": "^5.0.0",
     "gulp-uglify": "^3.0.1",
     "jasmine": "^3.3.1",
