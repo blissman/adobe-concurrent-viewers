@@ -1,14 +1,14 @@
 {
-  "name": "gulpkarma",
-  "version": "1.0.0",
-  "description": "a starter repository for setting up gulp and karma",
+  "name": "gulpbuild",
+  "version": "1.1.0",
+  "description": "a starter repository for setting up gulp",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blissman/gulpkarma.git"
+    "url": "git+https://github.com/blissman/gulpbuild.git"
   },
   "keywords": [
     "gulp",
@@ -18,9 +18,9 @@
   "author": "Bliss Man",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/blissman/gulpkarma/issues"
+    "url": "https://github.com/blissman/gulpbuild/issues"
   },
-  "homepage": "https://github.com/blissman/gulpkarma#readme",
+  "homepage": "https://github.com/blissman/gulpbuild#readme",
   "devDependencies": {
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
