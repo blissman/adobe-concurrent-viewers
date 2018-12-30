@@ -20,7 +20,10 @@ brew install node
 
 ### Gulp.js
 
-You'll also need to install [Gulp.js](https://gulpjs.com/) (instructions on site).
+You'll also need to install [Gulp.js](https://gulpjs.com/).
+```bash
+npm install gulp-cli -g
+```
 
 ## Install Instructions
 
