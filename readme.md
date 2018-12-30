@@ -15,14 +15,14 @@ Install [Homebrew](https://brew.sh/) if you're on macOS (it'll make the followin
 You'll need to install [Node.js](https://nodejs.org/en/) (instructions on site). If you're on macOS and have Homebrew installed, you can do this by typing into your terminal:
 
 ```bash
-brew install node
+$ brew install node
 ```
 
 ### Gulp.js
 
 You'll also need to install [Gulp.js](https://gulpjs.com/).
 ```bash
-npm install gulp-cli -g
+$ npm install gulp-cli -g
 ```
 
 ## Install Instructions
