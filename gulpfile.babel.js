@@ -2,6 +2,8 @@
 const gulp = require('gulp');
 // karma
 const Server = require('karma').Server;
+// clean
+const del = require('del');
 // uglify (js)
 const uglify = require('gulp-uglify');
 const pump = require('pump');
@@ -73,6 +75,16 @@ gulp.task('tdd', function(done) {
         configFile: __dirname + '/karma.conf.js'
     }, done()).start();
 });
+
+/*
+    clean task - remove existing dist folder and its contents
+*/
+gulp.task('clean:dist', function() {
+    return del([
+        'dist/**/*',
+    ]);
+});
+
 
 /*
     ESLint task
@@ -160,4 +172,4 @@ gulp.task('babel', () =>
 );
 
 
-gulp.task('default', gulp.series('lint', 'babel', gulp.parallel('uglify-js', 'minify-css', 'minify-html', 'minify-images'), 'test'));
+gulp.task('default', gulp.series(gulp.parallel('clean:dist', 'lint'), 'babel', gulp.parallel('uglify-js', 'minify-css', 'minify-html', 'minify-images'), 'test'));
