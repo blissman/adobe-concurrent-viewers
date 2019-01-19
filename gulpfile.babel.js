@@ -1,20 +1,5 @@
 // gulp
 const gulp = require('gulp');
-// karma
-const Server = require('karma').Server;
-// clean
-const del = require('del');
-// uglify (js)
-const uglify = require('gulp-uglify');
-const pump = require('pump');
-// minify (css)
-const cleanCSS = require('gulp-clean-css');
-// minify (html)
-const htmlmin = require('gulp-htmlmin');
-// minify (images)
-const imagemin = require('gulp-imagemin');
-// babel
-const babel = require('gulp-babel');
 // eslint
 const eslint = require('gulp-eslint');
 const eslintConfig = {
@@ -59,22 +44,21 @@ const eslintConfig = {
         "prefer-const": ["error"]
     }
 };
-
-/*
-    karma tasks
-*/
-gulp.task('test', function(done) {
-    new Server({
-        configFile: __dirname + '/karma.conf.js',
-        singleRun: true
-    }, done()).start();
-});
-
-gulp.task('tdd', function(done) {
-    new Server({
-        configFile: __dirname + '/karma.conf.js'
-    }, done()).start();
-});
+// clean
+const del = require('del');
+// babel
+const babel = require('gulp-babel');
+// uglify (js)
+const uglify = require('gulp-uglify');
+const pump = require('pump');
+// minify (css)
+const cleanCSS = require('gulp-clean-css');
+// minify (html)
+const htmlmin = require('gulp-htmlmin');
+// minify (images)
+const imagemin = require('gulp-imagemin');
+// karma
+const Server = require('karma').Server;
 
 /*
     clean task - remove existing dist folder and its contents
@@ -85,7 +69,6 @@ gulp.task('clean:dist', function() {
     ]);
 });
 
-
 /*
     ESLint task
 */
@@ -95,6 +78,17 @@ gulp.task('lint', function() {
         // Brick on failure to be super strict
         .pipe(eslint.failOnError());
 });
+
+/*
+    gulp-babel task
+*/
+gulp.task('babel', () =>
+    gulp.src('src/*.js')
+    .pipe(babel({
+        presets: ['@babel/env']
+    }))
+    .pipe(gulp.dest('dist'))
+);
 
 /*
     gulp-uglify (js) task
@@ -161,15 +155,19 @@ gulp.task('minify-images', () =>
 );
 
 /*
-    gulp-babel task
+    karma tasks
 */
-gulp.task('babel', () =>
-    gulp.src('src/*.js')
-    .pipe(babel({
-        presets: ['@babel/env']
-    }))
-    .pipe(gulp.dest('dist'))
-);
+gulp.task('test', function(done) {
+    new Server({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, done()).start();
+});
 
+gulp.task('tdd', function(done) {
+    new Server({
+        configFile: __dirname + '/karma.conf.js'
+    }, done()).start();
+});
 
 gulp.task('default', gulp.series(gulp.parallel('clean:dist', 'lint'), 'babel', gulp.parallel('uglify-js', 'minify-css', 'minify-html', 'minify-images'), 'test'));
