@@ -166,7 +166,7 @@ gulp.task('test', function(done) {
 
 gulp.task('tdd', function(done) {
     new Server({
-        configFile: __dirname + '/karma.conf.js'
+        configFile: __dirname + '/karmatdd.conf.js'
     }, done()).start();
 });
 
