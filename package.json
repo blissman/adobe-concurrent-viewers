@@ -32,12 +32,13 @@
     "gulp-eslint": "^5.0.0",
     "gulp-htmlmin": "^5.0.1",
     "gulp-imagemin": "^5.0.3",
+    "gulp-pump": "0.0.2",
+    "gulp-uglify": "^3.0.1",
     "gulp-uglify-es": "^1.0.4",
     "jasmine": "^3.3.1",
     "karma": "^4.0.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^2.0.1",
     "karma-parallel": "^0.3.1"
-  },
-  "dependencies": {}
+  }
 }
