@@ -49,8 +49,7 @@ const del = require('del');
 // babel
 const babel = require('gulp-babel');
 // uglify (js)
-const uglify = require('gulp-uglify');
-const pump = require('pump');
+const uglify = require('gulp-uglify-es').default;
 // minify (css)
 const cleanCSS = require('gulp-clean-css');
 // minify (html)
@@ -80,27 +79,12 @@ gulp.task('lint', function() {
 });
 
 /*
-    gulp-babel task
+    gulp-uglify (es6) task
 */
-gulp.task('babel', () =>
-    gulp.src('src/*.js')
-    .pipe(babel({
-        presets: ['@babel/env']
-    }))
-    .pipe(gulp.dest('dist'))
-);
-
-/*
-    gulp-uglify (js) task
-*/
-gulp.task('uglify-js', function(callback) {
-    pump([
-            gulp.src('dist/*.js'),
-            uglify(),
-            gulp.dest('dist')
-        ],
-        callback
-    );
+gulp.task('uglify', function () {
+    return gulp.src('src/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('dist'));
 });
 
 /*
@@ -155,6 +139,17 @@ gulp.task('minify-images', () =>
 );
 
 /*
+    gulp-babel task
+*/
+gulp.task('babel', () =>
+    gulp.src('dist/*.js')
+    .pipe(babel({
+        presets: ['@babel/env']
+    }))
+    .pipe(gulp.dest('dist'))
+);
+
+/*
     karma tasks
 */
 gulp.task('test', function(done) {
@@ -177,13 +172,13 @@ gulp.task(
             'clean:dist',
             'lint'
         ),
-        'babel',
         gulp.parallel(
             'uglify-js',
             'minify-css',
             'minify-html',
             'minify-images'
         ),
+        'babel',
         'test'
     )
 );
@@ -196,6 +191,23 @@ gulp.task(
             'lint'
         ),
         'babel',
+        'test'
+    )
+);
+
+gulp.task(
+    'es6',
+    gulp.series(
+        gulp.parallel(
+            'clean:dist',
+            'lint'
+        ),
+        gulp.parallel(
+            'uglify-js',
+            'minify-css',
+            'minify-html',
+            'minify-images'
+        ),
         'test'
     )
 );
