@@ -170,4 +170,32 @@ gulp.task('tdd', function(done) {
     }, done()).start();
 });
 
-gulp.task('default', gulp.series(gulp.parallel('clean:dist', 'lint'), 'babel', gulp.parallel('uglify-js', 'minify-css', 'minify-html', 'minify-images'), 'test'));
+gulp.task(
+    'default',
+    gulp.series(
+        gulp.parallel(
+            'clean:dist',
+            'lint'
+        ),
+        'babel',
+        gulp.parallel(
+            'uglify-js',
+            'minify-css',
+            'minify-html',
+            'minify-images'
+        ),
+        'test'
+    )
+);
+
+gulp.task(
+    'pretty',
+    gulp.series(
+        gulp.parallel(
+            'clean:dist',
+            'lint'
+        ),
+        'babel',
+        'test'
+    )
+);
