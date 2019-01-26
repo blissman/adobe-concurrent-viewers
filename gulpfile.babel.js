@@ -81,7 +81,7 @@ gulp.task('lint', function() {
 /*
     gulp-uglify (es6) task
 */
-gulp.task('uglify', function () {
+gulp.task('uglify-js', function () {
     return gulp.src('src/*.js')
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
