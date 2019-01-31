@@ -184,7 +184,7 @@ gulp.task('tdd', function(done) {
 /*
     gulp tasks
 */
-gulp.task(
+gulp.task(  // clean, lint, transpile to es5, uglify, and test
     'default',
     gulp.series(
         gulp.parallel(
@@ -202,7 +202,7 @@ gulp.task(
     )
 );
 
-gulp.task(
+gulp.task( // same as default, but no uglify
     'pretty',
     gulp.series(
         gulp.parallel(
@@ -214,7 +214,7 @@ gulp.task(
     )
 );
 
-gulp.task(
+gulp.task( // same as default, but leaves code in es6
     'es6',
     gulp.series(
         gulp.parallel(
@@ -228,5 +228,36 @@ gulp.task(
             'minify-images'
         ),
         'test'
+    )
+);
+
+gulp.task( // skip linting and testing
+    'build',
+    gulp.series(
+        gulp.parallel(
+            'clean:dist'
+        ),
+        'babel',
+        gulp.parallel(
+            'uglify-js',
+            'minify-css',
+            'minify-html',
+            'minify-images'
+        )
+    )
+);
+
+gulp.task( // skip linting and testing, and leaves code in es6
+    'buildes6',
+    gulp.series(
+        gulp.parallel(
+            'clean:dist'
+        ),
+        gulp.parallel(
+            'uglify-es6',
+            'minify-css',
+            'minify-html',
+            'minify-images'
+        )
     )
 );
