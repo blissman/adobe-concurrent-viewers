@@ -32,6 +32,7 @@
     "gulp-eslint": "^5.0.0",
     "gulp-htmlmin": "^5.0.1",
     "gulp-imagemin": "^5.0.3",
+    "gulp-jsbeautifier": "^3.0.0",
     "gulp-pump": "0.0.2",
     "gulp-uglify": "^3.0.1",
     "gulp-uglify-es": "^1.0.4",
