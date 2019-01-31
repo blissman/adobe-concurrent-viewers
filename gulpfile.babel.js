@@ -1,5 +1,9 @@
 // gulp
 const gulp = require('gulp');
+// beautify
+const beautify = require('gulp-jsbeautifier');
+// clean
+const del = require('del');
 // eslint
 const eslint = require('gulp-eslint');
 const eslintConfig = {
@@ -44,8 +48,6 @@ const eslintConfig = {
         "prefer-const": ["error"]
     }
 };
-// clean
-const del = require('del');
 // babel
 const babel = require('gulp-babel');
 // uglify (js)
@@ -61,6 +63,15 @@ const htmlmin = require('gulp-htmlmin');
 const imagemin = require('gulp-imagemin');
 // karma
 const Server = require('karma').Server;
+
+/*
+    beautify task - beautify html, css, js in src folder
+*/
+gulp.task('beautify', () =>
+    gulp.src(['src/*.css', 'src/*.html', 'src/*.js'])
+    .pipe(beautify())
+    .pipe(gulp.dest('src'))
+);
 
 /*
     clean task - remove existing dist folder and its contents
@@ -97,7 +108,7 @@ gulp.task('uglify-js', function(callback) {
 /*
     gulp-uglify (es6) task
 */
-gulp.task('uglify-es6', function () {
+gulp.task('uglify-es6', function() {
     return gulp.src('src/*.js')
         .pipe(uglifyes6())
         .pipe(gulp.dest('dist'));
@@ -184,7 +195,7 @@ gulp.task('tdd', function(done) {
 /*
     gulp tasks
 */
-gulp.task(  // clean, lint, transpile to es5, uglify, and test
+gulp.task( // clean, lint, transpile to es5, uglify, and test
     'default',
     gulp.series(
         gulp.parallel(
