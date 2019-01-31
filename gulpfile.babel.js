@@ -107,12 +107,12 @@ gulp.task('uglify-es6', function () {
     gulp minify (css) task
 */
 gulp.task('minify-css', () => {
-    return gulp.src('src/styles/*.css')
+    return gulp.src('src/*.css')
         .pipe(cleanCSS({
             compatibility: '*',
             level: 2
         }))
-        .pipe(gulp.dest('dist/styles'));
+        .pipe(gulp.dest('dist'));
 });
 
 /*
