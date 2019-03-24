@@ -1,6 +1,6 @@
-describe('greeter', function() {
+describe('greeter', () => {
 
-    it('should say Hello to the World', function() {
+    it('should say Hello to the World', () => {
         expect(greet('World')).toEqual('Hello, World!');
     });
 });
