@@ -1,26 +1,25 @@
 {
-  "name": "gulpbuild",
-  "version": "1.1.0",
-  "description": "a starter repository for setting up gulp",
+  "name": "adobeanalyticstocsv",
+  "version": "1.0.0",
+  "description": "convert adobe analytics data to csv",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blissman/gulpbuild.git"
+    "url": "git+https://github.com/blissman/adobeAnalyticsToCSV.git"
   },
   "keywords": [
-    "gulp",
-    "karma",
-    "testing"
+    "adobe",
+    "analytics"
   ],
   "author": "Bliss Man",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/blissman/gulpbuild/issues"
+    "url": "https://github.com/blissman/adobeAnalyticsToCSV/issues"
   },
-  "homepage": "https://github.com/blissman/gulpbuild#readme",
+  "homepage": "https://github.com/blissman/adobeAnalyticsToCSV#readme",
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
