@@ -5,7 +5,6 @@ const testHTML = `
 <head>
 </head>
 <body>
-    <input type="text" id="fiptest">
 </body>
 </html>
 `;
@@ -16,6 +15,7 @@ const { document } = window;
 global.window = window;
 global.document = document;
 const $ = global.jQuery = require( 'jquery' );
+require("./wsse.js");
 require("./marketing_cloud.js");
 require("./user.js");
 
