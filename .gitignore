@@ -33,3 +33,4 @@ dist
 
 # user file
 src/user.js
+src/report.js
