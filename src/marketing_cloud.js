@@ -1,3 +1,4 @@
+    
 (function($) {
   window.MarketingCloud = {
     env:   {},
@@ -22,4 +23,4 @@
         });
     }
   };
-});
+})(jQuery);

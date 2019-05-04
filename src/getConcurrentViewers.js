@@ -1,8 +1,26 @@
 const fs = require("fs");
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
-const { window } = (new JSDOM()).window;
-const $ = jQuery = require('jquery');
+const testHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <input type="text" id="fiptest">
+</body>
+</html>
+`;
+const { JSDOM } = require( 'jsdom' );
+const jsdom = new JSDOM( testHTML );
+
+// Set window and document from jsdom
+const { window } = jsdom;
+const { document } = window;
+// Also set global window and document before requiring jQuery
+global.window = window;
+global.document = document;
+
+const $ = global.jQuery = require( 'jquery' );
+
 require("./wsse.js");
 require("./marketing_cloud.js");
 
