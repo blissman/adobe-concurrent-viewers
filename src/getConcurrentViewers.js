@@ -36,7 +36,6 @@ const method = "Report.Get"; // determines the type of API request (you can leav
 const endpoint = "api.omniture.com"; // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
 let reportID = "";
 const body = {
-    "reportID": reportID.reportID,
     "reportDescription": {
         "reportSuiteID": rsid,
         "dateFrom": startDate,
@@ -48,9 +47,9 @@ const body = {
             "id": "videoconcurrentviewers",
             "top": "2880"
         }],
-        // "segments": [{
-        //     "id": segmentId
-        // }],
+        "segments": [{
+            "id": segmentId
+        }],
         "sortBy": "instances",
         "locale": "en_US"
     }
@@ -58,8 +57,9 @@ const body = {
 
 window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
     reportID = JSON.parse(e.responseText).reportID;
+    let newBody = body;
+    newBody.reportID = reportID;
+    window.MarketingCloud.makeRequest(userName, sharedSecret, method, newBody, endpoint, function(e) {
+        console.log(e.responseText)
+    })
 });
-
-// window.MarketingCloud.makeRequest(userName, sharedSecret, method, body, endpoint, function(e) {
-//     console.log(e.responseText)
-// });
