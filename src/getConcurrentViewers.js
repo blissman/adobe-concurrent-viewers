@@ -21,7 +21,7 @@ global.document = document;
 
 const $ = global.jQuery = require( 'jquery' );
 
-require("./wsse.js");
+// require("./wsse.js");
 require("./marketing_cloud.js");
 
 const userName = "userName"; // insert your user name in here
@@ -31,6 +31,6 @@ const method = "Company.GetReportSuites"; // determines the type of API request 
 const endpoint = "api.omniture.com"; // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
 const body = {}; // the request body (input your report parameters here)
 
-MarketingCloud.makeRequest(userName, sharedSecret, method, body, endpoint, function(e) {
+window.MarketingCloud.makeRequest(userName, sharedSecret, method, body, endpoint, function(e) {
     console.log(e.responseText)
 });
