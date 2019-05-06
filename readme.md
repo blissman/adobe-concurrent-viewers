@@ -26,7 +26,7 @@ $ brew install node
 
 ### Setting Up Your User
 
-Using the ```userTemplate.js``` file as a guide, create a ```user.js``` file in src folder. Fill out your ``user name`` and ```shared secret``` from the ```Admin -> User Management``` console of Adobe Analytics. 
+Using the ```userTemplate.js``` file as a guide, create a ```user.js``` file in src folder. Fill out your ``user name`` and ```shared secret``` from the ```Admin -> User Management -> Edit User``` console of Adobe Analytics. 
 
 ### Setting Up Your Report
 
