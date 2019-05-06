@@ -25,6 +25,7 @@ require("./wsse.js");
 require("./marketing_cloud.js");
 require("./user.js");
 require("./report.js");
+require("./parseToCSV.js");
 
 const rsid = window.report.rsid; // your RSID name
 const segmentId = window.report.segmentId; // insert your segment id here
@@ -57,14 +58,15 @@ const body = {
 
 const callReport = (newBody) => {
     window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Get", newBody, endpoint, function(e) {
-        if (e.responseText.error === "report_not_ready" && retryCount < 3) {
+        if (JSON.parse(e.responseText).error === "report_not_ready" && retryCount < 3) {
             setTimeout(() => {
                 callReport(newBody);
-            }, 60000);
+            }, 20000);
             retryCount++;
-        } else if (e.responseText && e.responseText.report) {
+        } else if (e.responseText && JSON.parse(e.responseText).report) {
             // parse your json here
-            console.log(e.responseText);
+            const returnValue = window.parseData(JSON.parse(e.responseText));
+            console.log(returnValue);
         } else if (retryCount >= 3) {
             console.log("Error: could not view report after three retries!");
         } else {
@@ -75,7 +77,9 @@ const callReport = (newBody) => {
 
 const callQueue = () => {
     window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
-        reportID = JSON.parse(e.responseText).reportID;
+        console.log(e.responseText);
+        const reportID = JSON.parse(e.responseText).reportID;
+        console.log("reportID: " + reportID);
         const newBody = body;
         newBody.reportID = reportID;
         callReport(newBody);
