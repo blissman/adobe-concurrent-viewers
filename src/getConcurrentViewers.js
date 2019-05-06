@@ -35,8 +35,8 @@ const userName = window.user.name;
 const sharedSecret = window.user.sharedSecret;
 const endpoint = "api.omniture.com"; // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
 let reportID = "";
-// const reportPath = "../reports/" + reportID + ".csv";
 let retryCount = 0;
+const retryLimit = 3;
 const body = {
     "reportDescription": {
         "reportSuiteID": rsid,
@@ -59,7 +59,7 @@ const body = {
 
 const callReport = (newBody) => {
     window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Get", newBody, endpoint, function(e) {
-        if (JSON.parse(e.responseText).error === "report_not_ready" && retryCount < 3) {
+        if (JSON.parse(e.responseText).error === "report_not_ready" && retryCount < retryLimit) {
             setTimeout(() => {
                 callReport(newBody);
             }, 20000);
@@ -72,7 +72,7 @@ const callReport = (newBody) => {
                 }
             });
             console.log(returnValue);
-        } else if (retryCount >= 3) {
+        } else if (retryCount >= retryLimit) {
             console.log("Error: could not view report after three retries!");
         } else {
             console.log("Error:" + e.responseText);
