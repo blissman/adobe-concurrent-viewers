@@ -1,3 +1,6 @@
+/*
+    Dependencies (I don't love jQuery either but Adobe's library uses it)
+*/
 const fs = require("file-system");
 const testHTML = `
 <!DOCTYPE html>
@@ -27,6 +30,9 @@ require("./user.js");
 require("./report.js");
 require("./parseToCSV.js");
 
+/*
+    Adobe Variables
+*/
 const rsid = window.report.rsid; // your RSID name
 const segmentId = window.report.segmentId; // insert your segment id here
 const startDate = window.report.startDate; // your start date in YYYY-MM-DD format
@@ -34,9 +40,6 @@ const endDate = window.report.endDate; // your end date in YYYY-MM-DD format
 const userName = window.user.name;
 const sharedSecret = window.user.sharedSecret;
 const endpoint = "api.omniture.com"; // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
-let reportID = "";
-let retryCount = 0;
-const retryLimit = 3;
 const body = {
     "reportDescription": {
         "reportSuiteID": rsid,
@@ -56,6 +59,13 @@ const body = {
         "locale": "en_US"
     }
 };
+
+/*
+    Methods
+*/
+let reportID = "";
+let retryCount = 0;
+const retryLimit = 3;
 
 const callReport = (newBody) => {
     window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Get", newBody, endpoint, function(e) {
@@ -80,7 +90,7 @@ const callReport = (newBody) => {
     });
 };
 
-const callQueue = () => {
+const init = () => {
     window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
         console.log("Report Queue Response: " + e.responseText);
         reportID = JSON.parse(e.responseText).reportID;
@@ -91,4 +101,4 @@ const callQueue = () => {
     });
 };
 
-callQueue();
+init();
