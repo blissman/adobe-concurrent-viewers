@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("file-system");
 const testHTML = `
 <!DOCTYPE html>
 <html>
@@ -35,7 +35,7 @@ const userName = window.user.name;
 const sharedSecret = window.user.sharedSecret;
 const endpoint = "api.omniture.com"; // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
 let reportID = "";
-const reportPath = "../reports/" + reportID + ".csv";
+// const reportPath = "../reports/" + reportID + ".csv";
 let retryCount = 0;
 const body = {
     "reportDescription": {
@@ -65,9 +65,8 @@ const callReport = (newBody) => {
             }, 20000);
             retryCount++;
         } else if (e.responseText && JSON.parse(e.responseText).report) {
-            // parse your json here
             const returnValue = window.parseData(JSON.parse(e.responseText));
-            fs.writeFile(reportPath, returnValue, (err, data) => {
+            fs.writeFile("./reports/" + reportID + ".csv", returnValue, (err, data) => {
                 if (err) {
                     console.log(err);
                 }
