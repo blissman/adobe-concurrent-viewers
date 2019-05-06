@@ -59,7 +59,9 @@ const body = {
 const callReport = (newBody) => {
     window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Get", newBody, endpoint, function(e) {
         if (e.responseText.error === "report_not_ready" && retryCount < 3) {
-            setTimeout(() => {callReport(newBody)}, 60000);
+            setTimeout(() => {
+                callReport(newBody)
+            }, 60000);
             retryCount++;
         } else if (e.responseText && e.responseText.report) {
             // parse your json here
