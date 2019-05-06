@@ -35,6 +35,7 @@ const sharedSecret = window.user.sharedSecret;
 const method = "Report.Get"; // determines the type of API request (you can leave this alone)
 const endpoint = "api.omniture.com"; // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
 let reportID = "";
+let retryCount = 0;
 const body = {
     "reportDescription": {
         "reportSuiteID": rsid,
@@ -55,11 +56,29 @@ const body = {
     }
 };
 
-window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
-    reportID = JSON.parse(e.responseText).reportID;
-    let newBody = body;
-    newBody.reportID = reportID;
-    window.MarketingCloud.makeRequest(userName, sharedSecret, method, newBody, endpoint, function(e) {
-        console.log(e.responseText)
-    })
-});
+const callReport = (newBody) => {
+    window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Get", newBody, endpoint, function(e) {
+        if (e.responseText.error === "report_not_ready" && retryCount < 3) {
+            setTimeout(() => {callReport(newBody)}, 60000);
+            retryCount++;
+        } else if (e.responseText && e.responseText.report) {
+            // parse your json here
+            console.log(e.responseText);
+        } else if (retryCount >= 3) {
+            console.log("Error: could not view report after three retries!");
+        } else {
+            console.log("Error:" + e.responseText);
+        }
+    });
+};
+
+const callQueue = () => {
+    window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
+        reportID = JSON.parse(e.responseText).reportID;
+        let newBody = body;
+        newBody.reportID = reportID;
+        callReport(newBody);
+    });
+};
+
+callQueue();
