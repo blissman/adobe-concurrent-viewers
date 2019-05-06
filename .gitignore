@@ -30,6 +30,7 @@ node_modules
 
 # output files
 dist
+reports
 
 # user file
 src/user.js

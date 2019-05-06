@@ -6,6 +6,10 @@ This is a tool for downloading data from Adobe Analytics' report APIs and output
 
 ## Pre-Requisites
 
+### Adobe Access
+
+In order to use this script, you'll need active Adobe Analytics access, and basic familiarity with the Adobe Analytics website.
+
 ### Homebrew
 
 Install [Homebrew](https://brew.sh/) if you're on macOS (it'll make the following installs much easier).
@@ -20,7 +24,23 @@ $ brew install node
 
 ## Using the Script
 
-Will fill this out as I figure it out.
+### Setting Up Your User
+
+Using the ```userTemplate.js``` file as a guide, create a ```user.js``` file in src folder. Fill out your user name and shared secret from the Admin -> User Management console of Adobe Analytics. 
+
+### Setting Up Your Report
+
+Using the ```reportTemplate.js``` file as a guide, create a ```report.js``` file in the src folder. Fill out your rsid, segmentid, and start/end dates. You can leave your segmentid blank if you want all the data, or obtain your segment id by looking at the last query string parameter of your URL when editing your segment.
+
+### Running your Report
+
+If you have everything set up, it should be as simple as going to a new terminal, navigating to this repo and typing in:
+
+```bash
+$ node src/getConcurrentViewers.js
+```
+
+Your output files can be found in the reports folder.
 
 ## Credits
 
