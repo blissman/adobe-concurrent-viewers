@@ -9,14 +9,14 @@
          */
         makeRequest: function(username, secret, method, params, endpoint, callback) {
             var headers = window.MarketingCloud.wsse.generateAuth(username, secret);
-            var url = 'https://' + endpoint + '/admin/1.4/rest/?method=' + method;
+            var url = "https://" + endpoint + "/admin/1.4/rest/?method=" + method;
             $.ajax(url, {
-                type: 'POST',
+                type: "POST",
                 data: params,
                 complete: callback,
                 dataType: "text",
                 headers: {
-                    'X-WSSE': headers['X-WSSE']
+                    "X-WSSE": headers["X-WSSE"]
                 }
             });
         }

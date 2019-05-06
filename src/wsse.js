@@ -396,7 +396,7 @@ window.wsse = (() => {
             rval += " Created=\"" + p.c + "\"";
 
             return {
-                'X-WSSE': rval
+                "X-WSSE": rval
             };
         };
 

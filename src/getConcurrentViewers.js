@@ -10,7 +10,7 @@ const testHTML = `
 `;
 const {
     JSDOM
-} = require('jsdom');
+} = require("jsdom");
 const jsdom = new JSDOM(testHTML);
 const {
     window
@@ -20,7 +20,7 @@ const {
 } = window;
 global.window = window;
 global.document = document;
-const $ = global.jQuery = require('jquery');
+const $ = global.jQuery = require("jquery");
 require("./wsse.js");
 require("./marketing_cloud.js");
 require("./user.js");
@@ -32,7 +32,6 @@ const startDate = window.report.startDate; // your start date in YYYY-MM-DD form
 const endDate = window.report.endDate; // your end date in YYYY-MM-DD format
 const userName = window.user.name;
 const sharedSecret = window.user.sharedSecret;
-const method = "Report.Get"; // determines the type of API request (you can leave this alone)
 const endpoint = "api.omniture.com"; // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
 let reportID = "";
 let retryCount = 0;
@@ -77,7 +76,7 @@ const callReport = (newBody) => {
 const callQueue = () => {
     window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
         reportID = JSON.parse(e.responseText).reportID;
-        let newBody = body;
+        const newBody = body;
         newBody.reportID = reportID;
         callReport(newBody);
     });

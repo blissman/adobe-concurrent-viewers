@@ -3,7 +3,7 @@ module.exports = function(config) {
         browsers: ['ChromeHeadless'],
         frameworks: ['parallel', 'jasmine'],
         files: [
-            'src/**/*.js',
+            'src/**/parseToCSV.js',
             'test/**/*.spec.js'
         ]
     });
