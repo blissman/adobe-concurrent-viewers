@@ -82,7 +82,7 @@ const callReport = (newBody) => {
 
 const callQueue = () => {
     window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
-        console.log(e.responseText);
+        console.log("Report Queue Response: " + e.responseText);
         reportID = JSON.parse(e.responseText).reportID;
         console.log("reportID: " + reportID);
         const newBody = body;

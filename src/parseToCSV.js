@@ -12,7 +12,7 @@ window.parseData = (data) => {
     returnValue += "Time,Count,URL" + "\n";
     report.data.forEach((element) => {
         returnValue += element.name + "," + element.counts + "," + element.url + "\n";
-    })
-    returnValue += "Totals," + report.totals
+    });
+    returnValue += "Totals," + report.totals;
     return returnValue;
 };
