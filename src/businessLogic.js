@@ -67,16 +67,22 @@ window.getReport = {
         }
         const userName = userConfig.name;
         const sharedSecret = userConfig.sharedSecret;
-        const body = window.getReport.requestBody(reportConfig);
+        const reportType = reportConfig.type;
         const endpoint = reportConfig.endpoint;
-        window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
-            console.log("Report Queue Response: " + e.responseText);
-            const reportID = JSON.parse(e.responseText).reportID;
-            console.log("reportID: " + reportID);
-            const newBody = body;
-            newBody.reportID = reportID;
-            window.getReport.fetch(userConfig, reportConfig, newBody);
-        });
+        if (reportType === "daily") {
+            const body = window.getReport.requestBody(reportConfig);
+            window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
+                console.log("Report Queue Response: " + e.responseText);
+                const reportID = JSON.parse(e.responseText).reportID;
+                console.log("reportID: " + reportID);
+                const newBody = body;
+                newBody.reportID = reportID;
+                window.getReport.fetch(userConfig, reportConfig, newBody);
+            });
+        } else if (reportType === "monthly") {
+            const month = reportConfig.month;
+            // figure out how to loop monthly reports here
+        }
     },
     fetch: (userConfig, reportConfig, newBody) => {
         let retryCount = 0;
@@ -104,5 +110,20 @@ window.getReport = {
                 console.log("Error: " + e.responseText);
             }
         });
+    }
+};
+
+window.utils = {
+    getDays: (month, year) => {
+        if (!month || !year || typeof(month) !== "number" || typeof(year) !== "number" || month < 1 || month > 12) {
+            console.log("Error: month or year is invalid!");
+            return false;
+        }
+        let yearArray = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        if (year % 4 === 0) {
+            yearArray[1] = 29;
+        }
+
+        return yearArray[month - 1];
     }
 };

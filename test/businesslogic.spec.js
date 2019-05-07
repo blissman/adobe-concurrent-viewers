@@ -65,6 +65,9 @@ describe("parse to csv", () => {
     const report = {
             rsid: "testrsid",
             segmentId: "s311108103_5cccaa0d85d04262783da2e6",
+            type: "daily",
+            month: 5,
+            year: 2019,
             startDate: "2019-03-12",
             endDate: "2019-03-13"
         };
@@ -126,8 +129,46 @@ describe("parse to csv", () => {
         expect(window.getReport.requestBody).toHaveBeenCalledWith({
             rsid: 'testrsid',
             segmentId: 's311108103_5cccaa0d85d04262783da2e6',
+            type: "daily",
+            month: 5,
+            year: 2019,
             startDate: '2019-03-12',
             endDate: '2019-03-13'
         });
+    });
+
+    it("should return the right number of days for non leap-years", () => {
+        expect(window.utils.getDays(1, 2018)).toEqual(31);
+        expect(window.utils.getDays(2, 2019)).toEqual(28);
+        expect(window.utils.getDays(3, 2019)).toEqual(31);
+        expect(window.utils.getDays(4, 2019)).toEqual(30);
+        expect(window.utils.getDays(5, 2019)).toEqual(31);
+        expect(window.utils.getDays(6, 2019)).toEqual(30);
+        expect(window.utils.getDays(7, 2019)).toEqual(31);
+        expect(window.utils.getDays(8, 2019)).toEqual(31);
+        expect(window.utils.getDays(9, 2019)).toEqual(30);
+        expect(window.utils.getDays(10, 2019)).toEqual(31);
+        expect(window.utils.getDays(11, 2019)).toEqual(30);
+        expect(window.utils.getDays(12, 2019)).toEqual(31);
+    });
+
+    it("should return false for invalid months", () => {
+        expect(window.utils.getDays(0, 2019)).toBeFalsy();
+        expect(window.utils.getDays(undefined, 2019)).toBeFalsy();
+        expect(window.utils.getDays(null, 2019)).toBeFalsy();
+        expect(window.utils.getDays(()=>{}, 2019)).toBeFalsy();
+        expect(window.utils.getDays(13, 2019)).toBeFalsy();
+        expect(window.utils.getDays("thirteen", 2019)).toBeFalsy();
+        expect(window.utils.getDays(12, "2019")).toBeFalsy();
+        expect(window.utils.getDays(11, null)).toBeFalsy();
+        expect(window.utils.getDays(12, undefined)).toBeFalsy();
+        expect(window.utils.getDays(11, false)).toBeFalsy();
+    });
+
+
+    it("should return 29 for February leap years", () => {
+        expect(window.utils.getDays(2, 2020)).toEqual(29);
+        expect(window.utils.getDays(2, 2024)).toEqual(29);
+        expect(window.utils.getDays(2, 2028)).toEqual(29);
     });
 });
