@@ -165,7 +165,6 @@ describe("parse to csv", () => {
         expect(window.utils.getDays(11, false)).toBeFalsy();
     });
 
-
     it("should return 29 for February leap years", () => {
         expect(window.utils.getDays(2, 2020)).toEqual(29);
         expect(window.utils.getDays(2, 2024)).toEqual(29);
