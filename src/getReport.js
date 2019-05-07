@@ -33,32 +33,8 @@ require("./businessLogic.js");
 /*
     Adobe Variables
 */
-const rsid = window.report.rsid; // your RSID name
-const segmentId = window.report.segmentId; // insert your segment id here
-const startDate = window.report.startDate; // your start date in YYYY-MM-DD format
-const endDate = window.report.endDate; // your end date in YYYY-MM-DD format
 const userName = window.user.name;
 const sharedSecret = window.user.sharedSecret;
-const endpoint = "api.omniture.com"; // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
-const body = {
-    "reportDescription": {
-        "reportSuiteID": rsid,
-        "dateFrom": startDate,
-        "dateTo": endDate,
-        "metrics": [{
-            "id": "instances"
-        }],
-        "elements": [{
-            "id": "videoconcurrentviewers",
-            "top": "2880"
-        }],
-        "segments": [{
-            "id": segmentId
-        }],
-        "sortBy": "instances",
-        "locale": "en_US"
-    }
-};
 
 /*
     Methods

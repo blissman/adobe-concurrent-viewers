@@ -31,7 +31,7 @@ window.parseData = {
 
 window.getReport = {
     requestBody: (reportConfig) => {
-        if (!reportConfig) {
+        if (!reportConfig && typeof(reportConfig) !== "object") {
             console.log("Error: report config object is not ready!")
             return false;
         }
@@ -59,5 +59,17 @@ window.getReport = {
             }
         };
         return body;
+    },
+    init: (userConfig, reportConfig) => {
+        const userName = userConfig.user.name;
+        const sharedSecret = userConfig.user.sharedSecret;
+        window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
+            console.log("Report Queue Response: " + e.responseText);
+            reportID = JSON.parse(e.responseText).reportID;
+            console.log("reportID: " + reportID);
+            const newBody = body;
+            newBody.reportID = reportID;
+            callReport(newBody);
+        });
     }
 };
