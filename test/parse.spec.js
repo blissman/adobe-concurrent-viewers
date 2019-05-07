@@ -54,4 +54,39 @@ describe("parse to csv", () => {
         );
     });
 
+    it("should return false if getReport.requestBody() is called without a report config object set", () => {
+        expect(window.getReport.requestBody()).toBeFalsy();
+    });
+
+    it("should return a body object if getReport.requestBody() is called with a report config object set", () => {
+        const report = {
+            rsid: "testrsid",
+            segmentId: "s311108103_5cccaa0d85d04262783da2e6",
+            startDate: "2019-03-12",
+            endDate: "2019-03-13"
+        };
+        const result = {
+            "reportDescription": {
+                "reportSuiteID": "testrsid",
+                "dateFrom": "2019-03-12",
+                "dateTo": "2019-03-13",
+                "metrics": [{
+                    "id": "instances"
+                }],
+                "elements": [{
+                    "id": "videoconcurrentviewers",
+                    "top": "2880"
+                }],
+                "segments": [{
+                    "id": "s311108103_5cccaa0d85d04262783da2e6"
+                }],
+                "sortBy": "instances",
+                "locale": "en_US"
+            }
+        };
+        expect(window.getReport.requestBody(report)).toEqual(result);
+        delete report;
+        delete result;
+    });
+
 });

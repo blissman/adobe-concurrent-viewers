@@ -39,7 +39,7 @@ Note: Adobe's API limits concurrent viewer reports to 1 day.
 If you have everything set up, it should be as simple as going to a new terminal, navigating to this repo and typing in:
 
 ```bash
-$ sudo node src/getConcurrentViewers.js
+$ sudo node src/getReport.js
 ```
 
 Keep in mind that you need to use "sudo" to have admin rights ot create your file. Your output files can be found in the reports folder.

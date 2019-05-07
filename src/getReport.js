@@ -28,7 +28,7 @@ require("./adobeDependencies/wsse.js");
 require("./adobeDependencies/marketing_cloud.js");
 require("./config/user.js");
 require("./config/report.js");
-require("./parseToCSV.js");
+require("./businessLogic.js");
 
 /*
     Adobe Variables

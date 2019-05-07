@@ -3,7 +3,7 @@ module.exports = function(config) {
         browsers: ['ChromeHeadless'],
         frameworks: ['parallel', 'jasmine'],
         files: [
-            'src/**/parseToCSV.js',
+            'src/**/businessLogic.js',
             'test/**/*.spec.js'
         ]
     });
