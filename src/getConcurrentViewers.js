@@ -24,10 +24,10 @@ const {
 global.window = window;
 global.document = document;
 const $ = global.jQuery = require("jquery");
-require("./wsse.js");
-require("./marketing_cloud.js");
-require("./user.js");
-require("./report.js");
+require("./adobeDependencies/wsse.js");
+require("./adobeDependencies/marketing_cloud.js");
+require("./config/user.js");
+require("./config/report.js");
 require("./parseToCSV.js");
 
 /*
