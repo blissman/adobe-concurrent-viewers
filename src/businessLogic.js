@@ -85,24 +85,24 @@ window.getReport = {
         const sharedSecret = userConfig.sharedSecret;
         const endpoint = reportConfig.endpoint;
         window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Get", newBody, endpoint, function(e) {
-        if (JSON.parse(e.responseText).error === "report_not_ready" && retryCount < retryLimit) {
-            setTimeout(() => {
-                window.getReport.fetch(newBody);
-            }, 20000);
-            retryCount++;
-        } else if (e.responseText && JSON.parse(e.responseText).report) {
-            const returnValue = window.parseData.returnCSV(JSON.parse(e.responseText));
-            window.fs.writeFile("./reports/" + newBody.reportID + ".csv", returnValue, (err, data) => {
-                if (err) {
-                    console.log(err);
-                }
-            });
-            console.log(returnValue);
-        } else if (retryCount >= retryLimit) {
-            console.log("Error: could not view report after three retries!");
-        } else {
-            console.log("Error:" + e.responseText);
-        }
-    });
+            if (JSON.parse(e.responseText).error === "report_not_ready" && retryCount < retryLimit) {
+                setTimeout(() => {
+                    window.getReport.fetch(newBody);
+                }, 20000);
+                retryCount++;
+            } else if (e.responseText && JSON.parse(e.responseText).report) {
+                const returnValue = window.parseData.returnCSV(JSON.parse(e.responseText));
+                window.fs.writeFile("./reports/" + newBody.reportID + ".csv", returnValue, (err, data) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+                console.log(returnValue);
+            } else if (retryCount >= retryLimit) {
+                console.log("Error: could not view report after three retries!");
+            } else {
+                console.log("Error:" + e.responseText);
+            }
+        });
     }
 };
