@@ -35,10 +35,10 @@ window.getReport = {
             console.log("Error: report config object is not ready!")
             return false;
         }
-        const rsid = reportConfig.rsid; // your RSID name
-        const segmentId = reportConfig.segmentId; // insert your segment id here
-        const startDate = reportConfig.startDate; // your start date in YYYY-MM-DD format
-        const endDate = reportConfig.endDate; // your end date in YYYY-MM-DD format
+        const rsid = reportConfig.rsid;
+        const segmentId = reportConfig.segmentId;
+        const startDate = reportConfig.startDate;
+        const endDate = reportConfig.endDate;
         const body = {
             "reportDescription": {
                 "reportSuiteID": rsid,
