@@ -31,7 +31,7 @@ window.parseData = {
 
 window.getReport = {
     requestBody: (reportConfig) => {
-        if (!reportConfig && typeof(reportConfig) !== "object") {
+        if (!reportConfig || typeof(reportConfig) !== "object") {
             console.log("Error: report config object is not ready!")
             return false;
         }
@@ -61,15 +61,48 @@ window.getReport = {
         return body;
     },
     init: (userConfig, reportConfig) => {
-        const userName = userConfig.user.name;
-        const sharedSecret = userConfig.user.sharedSecret;
+        if (!userConfig || typeof(userConfig) !== "object" || !reportConfig || typeof(reportConfig) !== "object") {
+            console.log("Error: user or report config is invalid!");
+            return false;
+        }
+        const userName = userConfig.name;
+        const sharedSecret = userConfig.sharedSecret;
+        const body = window.getReport.requestBody(reportConfig);
+        const endpoint = reportConfig.endpoint;
         window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
             console.log("Report Queue Response: " + e.responseText);
-            reportID = JSON.parse(e.responseText).reportID;
+            const reportID = JSON.parse(e.responseText).reportID;
             console.log("reportID: " + reportID);
             const newBody = body;
             newBody.reportID = reportID;
-            callReport(newBody);
+            window.getReport.fetch(userConfig, reportConfig, newBody);
         });
+    },
+    fetch: (userConfig, reportConfig, newBody) => {
+        let retryCount = 0;
+        const retryLimit = 3;
+        const userName = userConfig.name;
+        const sharedSecret = userConfig.sharedSecret;
+        const endpoint = reportConfig.endpoint;
+        window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Get", newBody, endpoint, function(e) {
+        if (JSON.parse(e.responseText).error === "report_not_ready" && retryCount < retryLimit) {
+            setTimeout(() => {
+                window.getReport.fetch(newBody);
+            }, 20000);
+            retryCount++;
+        } else if (e.responseText && JSON.parse(e.responseText).report) {
+            const returnValue = window.parseData.returnCSV(JSON.parse(e.responseText));
+            window.fs.writeFile("./reports/" + newBody.reportID + ".csv", returnValue, (err, data) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+            console.log(returnValue);
+        } else if (retryCount >= retryLimit) {
+            console.log("Error: could not view report after three retries!");
+        } else {
+            console.log("Error:" + e.responseText);
+        }
+    });
     }
 };

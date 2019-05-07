@@ -1,5 +1,9 @@
 describe("parse to csv", () => {
 
+    beforeEach(() => {
+        spyOn(window.getReport, "fetch").and.callThrough();
+    });
+
     const data = {
         "report": {
             "type": "ranked",
@@ -114,5 +118,5 @@ describe("parse to csv", () => {
         expect(window.getReport.init(user, ()=>{})).toBeFalsy();
         expect(window.getReport.init(user, 32)).toBeFalsy();
         expect(window.getReport.init(user, "string")).toBeFalsy();
-    })
+    });
 });
