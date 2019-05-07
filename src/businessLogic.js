@@ -22,10 +22,10 @@ window.parseData = {
         return body;
     },
     returnCSV: (data) => {
-        let returnValue = "";
-        returnValue += window.parseData.generateHeader(data);
-        returnValue += window.parseData.generateBody(data);
-        return returnValue;
+        let CSV = "";
+        CSV += window.parseData.generateHeader(data);
+        CSV += window.parseData.generateBody(data);
+        return CSV;
     }
 };
 
