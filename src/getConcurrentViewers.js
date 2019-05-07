@@ -75,7 +75,7 @@ const callReport = (newBody) => {
             }, 20000);
             retryCount++;
         } else if (e.responseText && JSON.parse(e.responseText).report) {
-            const returnValue = window.parseData(JSON.parse(e.responseText));
+            const returnValue = window.parseData.returnCSV(JSON.parse(e.responseText));
             fs.writeFile("./reports/" + reportID + ".csv", returnValue, (err, data) => {
                 if (err) {
                     console.log(err);
