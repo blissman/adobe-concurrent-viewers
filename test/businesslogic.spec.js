@@ -1,7 +1,12 @@
 describe("parse to csv", () => {
 
     beforeEach(() => {
+        spyOn(window.getReport, "requestBody").and.callThrough();
         spyOn(window.getReport, "fetch").and.callThrough();
+        window.MarketingCloud = {};
+        window.MarketingCloud.makeRequest = () => {
+            return true;
+        };
     });
 
     const data = {
@@ -61,7 +66,7 @@ describe("parse to csv", () => {
     it("should return false if getReport.requestBody() is called without a report config object", () => {
         expect(window.getReport.requestBody(undefined)).toBeFalsy();
         expect(window.getReport.requestBody(null)).toBeFalsy();
-        expect(window.getReport.requestBody(()=>{})).toBeFalsy();
+        expect(window.getReport.requestBody(() => {})).toBeFalsy();
         expect(window.getReport.requestBody(32)).toBeFalsy();
         expect(window.getReport.requestBody("string")).toBeFalsy();
     });
@@ -110,13 +115,33 @@ describe("parse to csv", () => {
         };
         expect(window.getReport.init(undefined, report)).toBeFalsy();
         expect(window.getReport.init(null, report)).toBeFalsy();
-        expect(window.getReport.init(()=>{}, report)).toBeFalsy();
+        expect(window.getReport.init(() => {}, report)).toBeFalsy();
         expect(window.getReport.init(32, report)).toBeFalsy();
         expect(window.getReport.init("string", report)).toBeFalsy();
         expect(window.getReport.init(user, undefined)).toBeFalsy();
         expect(window.getReport.init(user, null)).toBeFalsy();
-        expect(window.getReport.init(user, ()=>{})).toBeFalsy();
+        expect(window.getReport.init(user, () => {})).toBeFalsy();
         expect(window.getReport.init(user, 32)).toBeFalsy();
         expect(window.getReport.init(user, "string")).toBeFalsy();
+    });
+
+    it("should generate a request body if init is called with valid user and report configurations", () => {
+        const user = {
+            name: "gerald.butts@canada.ca:Federal Government",
+            sharedSecret: "0be47a0a1aab316891eeae4e6555551b"
+        };
+        const report = {
+            rsid: "testrsid",
+            segmentId: "s311108103_5cccaa0d85d04262783da2e6",
+            startDate: "2019-03-12",
+            endDate: "2019-03-13"
+        };
+        window.getReport.init(user, report);
+        expect(window.getReport.requestBody).toHaveBeenCalledWith({
+            rsid: 'testrsid',
+            segmentId: 's311108103_5cccaa0d85d04262783da2e6',
+            startDate: '2019-03-12',
+            endDate: '2019-03-13'
+        });
     });
 });
