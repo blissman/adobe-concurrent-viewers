@@ -101,7 +101,7 @@ window.getReport = {
             } else if (retryCount >= retryLimit) {
                 console.log("Error: could not view report after " + retryLimit + " retries!");
             } else {
-                console.log("Error:" + e.responseText);
+                console.log("Error: " + e.responseText);
             }
         });
     }
