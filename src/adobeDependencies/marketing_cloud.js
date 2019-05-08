@@ -27,7 +27,7 @@ window.MarketingCloud = {
     wsse: window.wsse(),
     makeRequest: (username, secret, method, params, endpoint, callback) => {
 
-        const url = "https://" + endpoint + "/admin/1.4/rest/?method=" + method;
+        const url = "https://" + endpoint + "/admin/1.4/rest/?method=" + method + "&" + jQuery.param(params);
         const headers = window.MarketingCloud.wsse.generateAuth(username, secret);
 
         // Create the XHR request
@@ -65,8 +65,7 @@ window.MarketingCloud = {
             // set the auth headers
             request.setRequestHeader("X-WSSE", headers["X-WSSE"]);
             // Send the request
-            console.log(params);
-            request.send(params);
+            request.send();
 
         });
     }

@@ -78,7 +78,7 @@ window.getReport = {
                 const newBody = body;
                 newBody.reportID = reportID;
                 // window.getReport.fetch(userConfig, reportConfig, newBody);
-            }).then((data) => {console.log(data);}).catch((error) => {console.log(error);});
+            }).then((data) => {console.log(data.responseText);}).catch((error) => {console.log(error);});
         } else if (reportType === "monthly") {
             const month = reportConfig.month;
             // figure out how to loop monthly reports here
