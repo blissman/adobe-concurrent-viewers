@@ -65,50 +65,44 @@ window.getReport = {
             console.log("Error: user or report config is invalid!");
             return false;
         }
-        const userName = userConfig.name;
-        const sharedSecret = userConfig.sharedSecret;
+
         const reportType = reportConfig.type;
-        const endpoint = reportConfig.endpoint;
+        let body = {};
         if (reportType === "daily") {
-            const body = window.getReport.requestBody(reportConfig);
-            window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Queue", body, endpoint, function(e) {
-                console.log("Report Queue Response: " + e.responseText);
-                const reportID = JSON.parse(e.responseText).reportID;
-                console.log("reportID: " + reportID);
-                const newBody = body;
-                newBody.reportID = reportID;
-                // window.getReport.fetch(userConfig, reportConfig, newBody);
-            }).then((data) => {console.log(data.responseText);}).catch((error) => {console.log(error);});
+            body = window.getReport.requestBody(reportConfig);
+            window.MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Queue", body).then((data) => {
+                const reportID = JSON.parse(data.responseText).reportID;
+                body.reportID = reportID;
+                // get the report
+                window.getReport.fetch(userConfig, reportConfig, body);
+            }).catch((error) => {
+                console.log(error);
+            });
         } else if (reportType === "monthly") {
             const month = reportConfig.month;
             // figure out how to loop monthly reports here
         }
     },
-    fetch: (userConfig, reportConfig, newBody) => {
-        let retryCount = 0;
-        const retryLimit = 3;
-        const userName = userConfig.name;
-        const sharedSecret = userConfig.sharedSecret;
-        const endpoint = reportConfig.endpoint;
-        window.MarketingCloud.makeRequest(userName, sharedSecret, "Report.Get", newBody, endpoint, function(e) {
-            if (JSON.parse(e.responseText).error === "report_not_ready" && retryCount < retryLimit) {
+    fetch: (userConfig, reportConfig, body) => {
+
+        window.MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Get", body).then((data) => {
+            let retryCount = 0;
+            const retryLimit = 3;
+            if (JSON.parse(data.responseText).error === "report_not_ready" && retryCount < retryLimit) {
                 setTimeout(() => {
-                    window.getReport.fetch(newBody);
-                }, 20000);
+                    window.getReport.fetch(userConfig, reportConfig, body);
+                }, 15000);
                 retryCount++;
-            } else if (e.responseText && JSON.parse(e.responseText).report) {
-                const returnValue = window.parseData.returnCSV(JSON.parse(e.responseText));
-                window.fs.writeFile("./reports/" + newBody.reportID + ".csv", returnValue, (err, data) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
-                console.log(returnValue);
+            } else if (data.responseText && JSON.parse(data.responseText).report) {
+                const report = window.parseData.returnCSV(JSON.parse(data.responseText));
+                console.log(report);
             } else if (retryCount >= retryLimit) {
                 console.log("Error: could not view report after " + retryLimit + " retries!");
             } else {
-                console.log("Error: " + e.responseText);
+                console.log("Error: " + data.responseText);
             }
+        }).catch((error) => {
+            console.log(error);
         });
     }
 };
