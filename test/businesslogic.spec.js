@@ -5,7 +5,10 @@ describe("parse to csv", () => {
         spyOn(window.getReport, "fetch").and.callThrough();
         window.MarketingCloud = {};
         window.MarketingCloud.makeRequest = () => {
-            return true;
+            return new Promise((resolve, reject) => {
+                resolve(true);
+                reject(false);
+            });
         };
     });
 

@@ -14,7 +14,7 @@ window.MarketingCloud = {
         const request = new window.XMLHttpRequest();
 
         // Return it as a Promise
-        return new Promise(function(resolve, reject) {
+        return new Promise((resolve, reject) =>{
 
             // Setup our listener to process compeleted requests
             request.onreadystatechange = () => {
