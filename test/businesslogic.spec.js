@@ -76,7 +76,7 @@ describe("parse to csv", () => {
         };
 
 
-    const result = {
+    const result = [{
         "reportDescription": {
             "reportSuiteID": "testrsid",
             "dateFrom": "2019-03-12",
@@ -94,7 +94,7 @@ describe("parse to csv", () => {
             "sortBy": "instances",
             "locale": "en_US"
         }
-    };
+    }];
 
     it("should parse the json to csv", () => {
         expect(window.parseData.returnCSV(data)).toEqual(

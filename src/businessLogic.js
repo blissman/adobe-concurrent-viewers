@@ -35,10 +35,14 @@ window.getReport = {
             console.log("Error: report config object is not ready!");
             return false;
         }
+        let startDate;
+        let endDate;
         const rsid = reportConfig.rsid;
         const segmentId = reportConfig.segmentId;
-        const startDate = reportConfig.startDate;
-        const endDate = reportConfig.endDate;
+        if (reportConfig.type === "daily") {
+            startDate = reportConfig.startDate;
+            endDate = reportConfig.endDate;
+        }
         const body = {
             "reportDescription": {
                 "reportSuiteID": rsid,
@@ -58,7 +62,7 @@ window.getReport = {
                 "locale": "en_US"
             }
         };
-        return body;
+        return [body];
     },
     init: (userConfig, reportConfig) => {
         if (!userConfig || typeof(userConfig) !== "object" || !reportConfig || typeof(reportConfig) !== "object") {
@@ -66,22 +70,18 @@ window.getReport = {
             return false;
         }
 
-        const reportType = reportConfig.type;
-        let body = {};
-        if (reportType === "daily") {
-            body = window.getReport.requestBody(reportConfig);
-            window.MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Queue", body).then((data) => {
+        let requestBodies = window.getReport.requestBody(reportConfig);
+        requestBodies.forEach((element) => {
+            window.MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Queue", element).then((data) => {
                 const reportID = JSON.parse(data.responseText).reportID;
-                body.reportID = reportID;
+                element.reportID = reportID;
                 // get the report
-                window.getReport.fetch(userConfig, reportConfig, body);
+                window.getReport.fetch(userConfig, reportConfig, element);
             }).catch((error) => {
                 console.log(error);
             });
-        } else if (reportType === "monthly") {
-            const month = reportConfig.month;
-            // figure out how to loop monthly reports here
-        }
+        })
+            
     },
     fetch: (userConfig, reportConfig, body) => {
 
