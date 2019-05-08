@@ -32,7 +32,7 @@ window.parseData = {
 window.getReport = {
     requestBody: (reportConfig) => {
         if (!reportConfig || typeof(reportConfig) !== "object") {
-            console.log("Error: report config object is not ready!")
+            console.log("Error: report config object is not ready!");
             return false;
         }
         const rsid = reportConfig.rsid;
@@ -77,8 +77,8 @@ window.getReport = {
                 console.log("reportID: " + reportID);
                 const newBody = body;
                 newBody.reportID = reportID;
-                window.getReport.fetch(userConfig, reportConfig, newBody);
-            });
+                // window.getReport.fetch(userConfig, reportConfig, newBody);
+            }).then((data) => {console.log(data);}).catch((error) => {console.log(error);});
         } else if (reportType === "monthly") {
             const month = reportConfig.month;
             // figure out how to loop monthly reports here
@@ -119,7 +119,7 @@ window.utils = {
             console.log("Error: month or year is invalid!");
             return false;
         }
-        let yearArray = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        const yearArray = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         if (year % 4 === 0) {
             yearArray[1] = 29;
         }
