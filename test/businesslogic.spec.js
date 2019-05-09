@@ -1,4 +1,4 @@
-describe("parse to csv", () => {
+describe("businesslogic", () => {
 
     beforeEach(() => {
         spyOn(window.getReport, "requestBody").and.callThrough();

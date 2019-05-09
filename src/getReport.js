@@ -1,6 +1,3 @@
-/*
-    Dependencies (I don't love jQuery either but Adobe's library uses it)
-*/
 const testHTML = `
 <!DOCTYPE html>
 <html>
