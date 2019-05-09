@@ -190,6 +190,8 @@ window.getReport = {
                 console.log(err);
             }
         });
+
+        return window.getReport.reportValue;
     }
 };
 
