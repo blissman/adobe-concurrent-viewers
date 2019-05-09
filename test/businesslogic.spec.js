@@ -96,12 +96,6 @@ describe("parse to csv", () => {
         }
     }];
 
-    it("should parse the json to csv", () => {
-        expect(window.parseData.returnCSV(data)).toEqual(
-            "type,ranked\nelements,Video Concurrent Viewers\nreportSuite,id,bellmediatsnprod\n,name,TSN - Prod\nPeriod,Thu.  2 May 2019 - Fri.  3 May 2019\nsegments,id,s300008103_5cccaa0d85d04262783da2e6\n,name,TSN Live Streams\ndata\nTime,Count,URL\n00:24 2019-05-02,237,\n00:25 2019-05-02,236,\n00:23 2019-05-02,236,\n00:26 2019-05-02,235,\n"
-        );
-    });
-
     it("should return false if getReport.requestBody() is called without a report config object", () => {
         expect(window.getReport.requestBody(undefined)).toBeFalsy();
         expect(window.getReport.requestBody(null)).toBeFalsy();
@@ -172,5 +166,28 @@ describe("parse to csv", () => {
         expect(window.utils.getDays(2, 2020)).toEqual(29);
         expect(window.utils.getDays(2, 2024)).toEqual(29);
         expect(window.utils.getDays(2, 2028)).toEqual(29);
+    });
+
+    it("should return month names correctly", () => {
+        expect(window.utils.getMonthName(null)).toBeFalsy();
+        expect(window.utils.getMonthName()).toBeFalsy();
+        expect(window.utils.getMonthName("6")).toBeFalsy();
+        expect(window.utils.getMonthName(()=>{})).toBeFalsy();
+        expect(window.utils.getMonthName(true)).toBeFalsy();
+        expect(window.utils.getMonthName(13)).toBeFalsy();
+        expect(window.utils.getMonthName(-1)).toBeFalsy();
+        expect(window.utils.getMonthName(0)).toBeFalsy();
+        expect(window.utils.getMonthName(1)).toEqual("January");
+        expect(window.utils.getMonthName(2)).toEqual("February");
+        expect(window.utils.getMonthName(3)).toEqual("March");
+        expect(window.utils.getMonthName(4)).toEqual("April");
+        expect(window.utils.getMonthName(5)).toEqual("May");
+        expect(window.utils.getMonthName(6)).toEqual("June");
+        expect(window.utils.getMonthName(7)).toEqual("July");
+        expect(window.utils.getMonthName(8)).toEqual("August");
+        expect(window.utils.getMonthName(9)).toEqual("September");
+        expect(window.utils.getMonthName(10)).toEqual("October");
+        expect(window.utils.getMonthName(11)).toEqual("November");
+        expect(window.utils.getMonthName(12)).toEqual("December");
     });
 });
