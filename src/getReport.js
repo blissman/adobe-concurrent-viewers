@@ -1,6 +1,3 @@
-/*
-    Dependencies (I don't love jQuery either but Adobe's library uses it)
-*/
 const testHTML = `
 <!DOCTYPE html>
 <html>
@@ -23,7 +20,7 @@ const {
 global.window = window;
 global.document = document;
 window.fs = require("file-system");
-const $ = global.jQuery = require("jquery");
+global.jQuery = require("jquery");
 require("./adobeDependencies/wsse.js");
 require("./adobeDependencies/marketing_cloud.js");
 require("./config/user.js");

@@ -1,24 +1,39 @@
-(function($) {
-    window.MarketingCloud = {
-        env: {},
-        wsse: window.wsse(),
+window.MarketingCloud = {
+    wsse: window.wsse(),
+    makeRequest: (userConfig, reportConfig, method, params) => {
 
-        /** Make the api request */
-        /* callback should follow standard jQuery request format:
-         *    function callback(data)
-         */
-        makeRequest: function(username, secret, method, params, endpoint, callback) {
-            var headers = window.MarketingCloud.wsse.generateAuth(username, secret);
-            var url = "https://" + endpoint + "/admin/1.4/rest/?method=" + method;
-            $.ajax(url, {
-                type: "POST",
-                data: params,
-                complete: callback,
-                dataType: "text",
-                headers: {
-                    "X-WSSE": headers["X-WSSE"]
+        const username = userConfig.name;
+        const secret = userConfig.sharedSecret;
+        const endpoint = reportConfig.endpoint;
+        const url = "https://" + endpoint + "/admin/1.4/rest/?method=" + method + "&" + jQuery.param(params);
+        const headers = window.MarketingCloud.wsse.generateAuth(username, secret);
+
+        const request = new window.XMLHttpRequest();
+
+        return new Promise((resolve, reject) =>{
+
+            request.onreadystatechange = () => {
+
+                if (request.readyState !== 4) {
+                    return;
                 }
-            });
-        }
-    };
-})(jQuery);
+
+                if (request.status >= 200 && request.status < 300) {
+                    resolve(request);
+                } else {
+                    reject({
+                        status: request.status,
+                        statusText: request.statusText,
+                        request: request,
+                        response: request.response
+                    });
+                }
+
+            };
+
+            request.open("POST", url, true);
+            request.setRequestHeader("X-WSSE", headers["X-WSSE"]);
+            request.send();
+        });
+    }
+};
