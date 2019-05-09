@@ -20,12 +20,6 @@ window.parseData = {
             body += element.name + "," + element.counts + "," + element.url + "\n";
         });
         return body;
-    },
-    returnCSV: (data) => {
-        let CSV = "";
-        CSV += window.parseData.generateHeader(data);
-        CSV += window.parseData.generateBody(data);
-        return CSV;
     }
 };
 
