@@ -48,6 +48,10 @@ $ sudo node src/getReport.js
 
 Keep in mind that you need to use "sudo" to have admin rights ot create your file. Your output files can be found in the reports folder.
 
+### Report Errors
+
+In some cases (if running large datasets, or complicated segments) the reports can take a while to generate on the Adobe Server. You will know if this is happening because the console will return a ```"report_not_ready"``` error (or series of errors). If you need to increase the time delay before retrieving the report, you can do so by adjusting the ```reportTimeout``` value in the report config.
+
 ## Credits
 
 Credits go to Adobe for their [Marketing Cloud Javascript SDK](https://github.com/Adobe-Marketing-Cloud/marketing-cloud-javascript-sdk).
