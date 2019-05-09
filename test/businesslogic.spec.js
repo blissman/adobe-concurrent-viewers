@@ -67,7 +67,7 @@ describe("businesslogic", () => {
 
     const report = {
             rsid: "testrsid",
-            segmentId: "s311108103_5cccaa0d85d04262783da2e6",
+            segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
             type: "daily",
             month: 5,
             year: 2019,
@@ -135,7 +135,7 @@ describe("businesslogic", () => {
         window.getReport.init(user, report);
         expect(window.getReport.requestBody).toHaveBeenCalledWith({
             rsid: 'testrsid',
-            segmentId: 's311108103_5cccaa0d85d04262783da2e6',
+            segmentId: ['s311108103_5cccaa0d85d04262783da2e6'],
             type: "daily",
             month: 5,
             year: 2019,
@@ -202,7 +202,12 @@ describe("businesslogic", () => {
     });
 
     it("should generate different header values for monthly and daily reports", () => {
-        expect(window.parseData.generateHeader(data, report)).toEqual("Type,ranked\nElements,Video Concurrent Viewers\nReport Suite,id,bellmediatsnprod\n,name,TSN - Prod\nPeriod,Thu.  2 May 2019 - Fri.  3 May 2019\nSegments,id,s300008103_5cccaa0d85d04262783da2e6\n,Name,TSN Live Streams\nData\nTime,Count,URL\n");
-        expect(window.parseData.generateHeader(data, monthlyReport)).toEqual("Type,ranked\nElements,Video Concurrent Viewers\nReport Suite,id,bellmediatsnprod\n,name,TSN - Prod\nPeriod,May - 2019\nSegments,id,s300008103_5cccaa0d85d04262783da2e6\n,Name,TSN Live Streams\nData\nTime,Count,URL\n");
+        expect(window.parseData.generateHeader(data, report)).toEqual("Type,ranked\nElements,Video Concurrent Viewers\nReport Suite,id,bellmediatsnprod\n,name,TSN - Prod\nPeriod,Thu.  2 May 2019 - Fri.  3 May 2019\nSegments,id,s300008103_5cccaa0d85d04262783da2e6 \n,Name,TSN Live Streams \nData\nTime,Count,URL\n");
+        expect(window.parseData.generateHeader(data, monthlyReport)).toEqual("Type,ranked\nElements,Video Concurrent Viewers\nReport Suite,id,bellmediatsnprod\n,name,TSN - Prod\nPeriod,May - 2019\nSegments,id,s300008103_5cccaa0d85d04262783da2e6 \n,Name,TSN Live Streams \nData\nTime,Count,URL\n");
+    });
+
+    it("should be able to accept multiple segments in an array", () => {
+        expect(window.utils.getSegments(["oneSegment"])).toEqual([{"id": "oneSegment"}]);
+        expect(window.utils.getSegments(["oneSegment", "twoSegments"])).toEqual([{"id": "oneSegment"}, {"id": "twoSegments"}]);
     });
 });

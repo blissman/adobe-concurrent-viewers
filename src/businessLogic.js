@@ -12,8 +12,18 @@ window.parseData = {
         } else {
             header += report.period + "\n";
         }
-        header += "Segments,id," + report.segments[0].id + "\n";
-        header += ",Name," + report.segments[0].name + "\n";
+        if (report.segments) {
+            header += "Segments,id,";
+            report.segments.forEach((element) => {
+                header += element.id + " ";
+            });
+            header += "\n";
+            header += ",Name,";
+            report.segments.forEach((element) => {
+                header += element.name + " ";
+            });
+            header += "\n";
+        }
         header += "Data" + "\n";
         header += "Time,Count,URL" + "\n";
         return header;
@@ -56,9 +66,7 @@ window.getReport = {
                         "id": "videoconcurrentviewers",
                         "top": "2880"
                     }],
-                    "segments": [{
-                        "id": segmentId
-                    }],
+                    "segments": window.utils.getSegments(segmentId),
                     "sortBy": "instances",
                     "locale": "en_US"
                 }
@@ -103,9 +111,7 @@ window.getReport = {
                             "id": "videoconcurrentviewers",
                             "top": "2880"
                         }],
-                        "segments": [{
-                            "id": segmentId
-                        }],
+                        "segments": window.utils.getSegments(segmentId),
                         "sortBy": "instances",
                         "locale": "en_US"
                     }
@@ -130,7 +136,7 @@ window.getReport = {
                 // get the report
                 window.setTimeout(() => {
                     window.getReport.fetch(userConfig, reportConfig, element);
-                }, 10000);
+                }, reportConfig.reportTimeout);
             }).catch((error) => {
                 console.log(error);
             });
@@ -144,14 +150,14 @@ window.getReport = {
             if (JSON.parse(data.responseText).error === "report_not_ready" && retryCount < retryLimit) {
                 setTimeout(() => {
                     window.getReport.fetch(userConfig, reportConfig, body);
-                }, 15000);
+                }, reportConfig.reportTimeout);
                 retryCount++;
             } else if (data.responseText && JSON.parse(data.responseText).report) {
                 if (window.getReport.reportValue === "") {
                     window.getReport.reportValue += window.parseData.generateHeader(JSON.parse(data.responseText), reportConfig);
                     window.setTimeout(() => {
                         window.getReport.writeReport(reportConfig, data);
-                    }, 10000);
+                    }, reportConfig.reportTimeout);
                 }
                 window.getReport.reportValue += window.parseData.generateBody(JSON.parse(data.responseText));
             } else if (retryCount >= retryLimit) {
@@ -172,7 +178,7 @@ window.getReport = {
         const type = reportConfig.type;
         const reportData = JSON.parse(data.responseText).report;
         let segmentName;
-        if (reportData.segments && reportData.segments[0]) {
+        if (reportData.segments && reportData.segments[0] && reportData.segments.length === 1) {
             segmentName = reportData.segments[0].name + "(" + reportData.segments[0].id + ")";
         } else {
             segmentName = reportData.reportSuite.name + "(" + reportData.reportSuite.id + ")";
@@ -216,5 +222,16 @@ window.utils = {
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
         return months[month - 1];
+    },
+    getSegments: (segments) => {
+        if (!segments && typeof(segments) !== "array") {
+            return false;
+        }
+        const segmentsList = [];
+        segments.forEach((element) => {
+            segmentsList.push({"id": element});
+        });
+
+        return segmentsList;
     }
 };
