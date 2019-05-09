@@ -1,5 +1,4 @@
 window.MarketingCloud = {
-    env: {},
     wsse: window.wsse(),
     makeRequest: (userConfig, reportConfig, method, params) => {
 
