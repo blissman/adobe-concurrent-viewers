@@ -1,15 +1,20 @@
 window.parseData = {
-    generateHeader: (data) => {
+    generateHeader: (data, reportConfig) => {
         const report = data.report;
         let header = "";
-        header += "type," + report.type + "\n";
-        header += "elements," + report.elements[0].name + "\n";
-        header += "reportSuite,id," + report.reportSuite.id + "\n";
+        header += "Type," + report.type + "\n";
+        header += "Elements," + report.elements[0].name + "\n";
+        header += "Report Suite,id," + report.reportSuite.id + "\n";
         header += ",name," + report.reportSuite.name + "\n";
-        header += "Period," + report.period + "\n";
-        header += "segments,id," + report.segments[0].id + "\n";
-        header += ",name," + report.segments[0].name + "\n";
-        header += "data" + "\n";
+        header += "Period,";
+        if (reportConfig && reportConfig.type === "monthly") {
+            header += window.utils.getMonthName(reportConfig.month) + " - " + reportConfig.year + "\n";
+        } else {
+            header += report.period + "\n";
+        }
+        header += "Segments,id," + report.segments[0].id + "\n";
+        header += ",Name," + report.segments[0].name + "\n";
+        header += "Data" + "\n";
         header += "Time,Count,URL" + "\n";
         return header;
     },
@@ -125,7 +130,7 @@ window.getReport = {
                 // get the report
                 window.setTimeout(() => {
                     window.getReport.fetch(userConfig, reportConfig, element);
-                }, 15000);
+                }, 10000);
             }).catch((error) => {
                 console.log(error);
             });
@@ -143,13 +148,9 @@ window.getReport = {
                 retryCount++;
             } else if (data.responseText && JSON.parse(data.responseText).report) {
                 if (window.getReport.reportValue === "") {
-                    window.getReport.reportValue += window.parseData.generateHeader(JSON.parse(data.responseText));
+                    window.getReport.reportValue += window.parseData.generateHeader(JSON.parse(data.responseText), reportConfig);
                     window.setTimeout(() => {
-                        window.fs.writeFile("./reports/" + JSON.parse(data.responseText).report.type + " - " + JSON.parse(data.responseText).report.period + ".csv", window.getReport.reportValue, (err, data) => {
-                            if (err) {
-                                console.log(err);
-                            }
-                        });
+                        window.getReport.writeReport(reportConfig, data);
                     }, 10000);
                 }
                 window.getReport.reportValue += window.parseData.generateBody(JSON.parse(data.responseText));
@@ -160,6 +161,34 @@ window.getReport = {
             }
         }).catch((error) => {
             console.log(error);
+        });
+    },
+    writeReport: (reportConfig, data) => {
+        if (!reportConfig && reportConfig.type !== "monthly" && reportConfig.type !== "daily") {
+            console.log("Error: writeReport - invalid reportConfig type!");
+            return false;
+        }
+
+        const type = reportConfig.type;
+        const reportData = JSON.parse(data.responseText).report;
+        let segmentName;
+        if (reportData.segments && reportData.segments[0]) {
+            segmentName = reportData.segments[0].name + "(" + reportData.segments[0].id + ")";
+        } else {
+            segmentName = reportData.reportSuite.name + "(" + reportData.reportSuite.id + ")";
+        }
+        let reportName;
+
+        if (type === "daily") {
+            reportName = segmentName + " - " + reportData.period;
+        } else if (type === "monthly") {
+            reportName = segmentName + " - " + window.utils.getMonthName(reportConfig.month) + ", " + reportConfig.year;
+        }
+
+        window.fs.writeFile("./reports/" + reportName + ".csv", window.getReport.reportValue, (err, data) => {
+            if (err) {
+                console.log(err);
+            }
         });
     }
 };
@@ -176,5 +205,14 @@ window.utils = {
         }
 
         return yearArray[month - 1];
+    },
+    getMonthName: (month) => {
+        if (!month || typeof(month) !== "number" || month < 1 || month > 12) {
+            console.log("Error: month or year is invalid!");
+            return false;
+        }
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        return months[month - 1];
     }
 };
