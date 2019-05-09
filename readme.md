@@ -22,6 +22,12 @@ You'll need to install [Node.js](https://nodejs.org/en/) (instructions on site).
 $ brew install node
 ```
 
+### Dependencies
+
+Install your dependencies with npm:
+```bash
+$ npm install
+```
 ## Using the Script
 
 ### Setting Up Your User
@@ -30,9 +36,7 @@ Using the ```userTemplate.js``` file as a guide, create a ```user.js``` file in 
 
 ### Setting Up Your Report
 
-Using the ```reportTemplate.js``` file as a guide, create a ```report.js``` file in the ```src/config``` folder. Fill out your ```rsid```, ```segmentid```, and ```start/end dates```. You can leave your ```segmentid``` blank if you want all the data, or obtain your ``segmentid`` by looking at the last query string parameter of your URL when editing your segment.
-
-Note: Adobe's API limits concurrent viewer reports to 1 day.
+Using the ```reportTemplate.js``` file as a guide, create a ```report.js``` file in the ```src/config``` folder. Fill out your ```type```, ```rsid```, ```segmentid```, and ```start/end dates```. You can leave your ```segmentid``` blank if you want all the data, or obtain your ``segmentid`` by looking at the last query string parameter of your URL when editing your segment.
 
 ### Running your Report
 
