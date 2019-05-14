@@ -32,7 +32,8 @@ window.parseData = {
         const report = data.report;
         let body = "";
         report.data.forEach((element) => {
-            body += element.name + "," + element.counts + "," + element.url + "\n";
+            const unixTime = new Date(element.name).getTime()/1000;
+            body += element.name + "," + unixTime + "," + element.counts + "," + element.url + "\n";
         });
         return body;
     }
