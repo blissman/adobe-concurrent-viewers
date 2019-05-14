@@ -25,7 +25,7 @@ window.parseData = {
             header += "\n";
         }
         header += "Data" + "\n";
-        header += "Time,Count,URL" + "\n";
+        header += "Time,Unix Timestamp,Count,URL" + "\n";
         return header;
     },
     generateBody: (data) => {
