@@ -7,5 +7,6 @@ window.report = {
     startDate: "2018-07-09", // your start date in YYYY-MM-DD format for daily reports
     endDate: "2018-07-10", // your end date in YYYY-MM-DD format for daily reports
     endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
-    reportTimeout: 30000 // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
+    reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
+    maxDataPoints: 2880 // this sets the limit on how many data points to pull (default is 2880
 };

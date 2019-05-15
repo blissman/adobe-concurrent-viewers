@@ -52,6 +52,10 @@ Keep in mind that you need to use "sudo" to have admin rights ot create your fil
 
 In some cases (if running large datasets, or complicated segments) the reports can take a while to generate on the Adobe Server. You will know if this is happening because the console will return a ```"report_not_ready"``` error (or series of errors). If you need to increase the time delay before retrieving the report, you can do so by adjusting the ```reportTimeout``` value in the report config.
 
+### Missing Data?
+
+By default, this report is set to return the top 2880 values. If you're requesting a big data set, this means that times and values can be dropped. By increasing this value in ```src/config/report.js``` you can mitigate this by requesting more data points.
+
 ## Credits
 
 Credits go to Adobe for their [Marketing Cloud Javascript SDK](https://github.com/Adobe-Marketing-Cloud/marketing-cloud-javascript-sdk).

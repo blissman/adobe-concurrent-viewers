@@ -65,7 +65,7 @@ window.getReport = {
                     }],
                     "elements": [{
                         "id": "videoconcurrentviewers",
-                        "top": "2880"
+                        "top": reportConfig.maxDataPoints.toString()
                     }],
                     "segments": window.utils.getSegments(segmentId),
                     "sortBy": "instances",
