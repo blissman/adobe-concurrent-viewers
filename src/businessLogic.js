@@ -113,7 +113,9 @@ window.getReport = {
                             "top": "2880"
                         }],
                         "segments": window.utils.getSegments(segmentId),
-                        "sortBy": "instances",
+                        "settings": {
+                            "limit":5
+                        },
                         "locale": "en_US"
                     }
                 };
