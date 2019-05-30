@@ -43,6 +43,10 @@ describe("businesslogic", () => {
                 "url": "",
                 "counts": ["237"]
             }, {
+                "name": "00:26 2019-05-02",
+                "url": "",
+                "counts": ["235"]
+            }, {
                 "name": "00:25 2019-05-02",
                 "url": "",
                 "counts": ["236"]
@@ -50,10 +54,6 @@ describe("businesslogic", () => {
                 "name": "00:23 2019-05-02",
                 "url": "",
                 "counts": ["236"]
-            }, {
-                "name": "00:26 2019-05-02",
-                "url": "",
-                "counts": ["235"]
             }],
             "totals": ["321749"],
             "version": "1.4.18.10"
@@ -235,6 +235,6 @@ describe("businesslogic", () => {
     });
 
     it("should parse the data body into CSV format", () => {
-        expect(window.parseData.generateBody(data)).toEqual("00:24 2019-05-02,1556771040,237,\n00:25 2019-05-02,1556771100,236,\n00:23 2019-05-02,1556770980,236,\n00:26 2019-05-02,1556771160,235,\n");
+        expect(window.parseData.generateBody(data)).toEqual("00:23 2019-05-02,1556770980,236,\n00:24 2019-05-02,1556771040,237,\n00:25 2019-05-02,1556771100,236,\n00:26 2019-05-02,1556771160,235,\n");
     });
 });
