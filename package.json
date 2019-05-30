@@ -24,6 +24,7 @@
         "@babel/preset-env": "^7.4.5",
         "@babel/register": "^7.4.4",
         "del": "^4.1.1",
+        "file-system": "^2.2.2",
         "gulp": "^4.0.2",
         "gulp-babel": "^8.0.0",
         "gulp-clean-css": "^4.2.0",
@@ -33,7 +34,8 @@
         "gulp-jsbeautifier": "^3.0.0",
         "gulp-uglify": "^3.0.2",
         "gulp-uglify-es": "^1.0.4",
-        "jest": "^24.8.0"
+        "jest": "^24.8.0",
+        "jquery": "^3.4.1"
     },
     "jest": {
         "collectCoverage": true,
