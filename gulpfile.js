@@ -17,25 +17,27 @@ const eslintConfig = {
     // See https://eslint.org/docs/rules/ for rules
     "rules": {
         "indent": [
-            "warn",
+            "error",
             4,
-            {"SwitchCase": 1}
+            {
+                "SwitchCase": 1
+            }
         ],
         "linebreak-style": [
-            "warn",
+            "error",
             "unix"
         ],
         "quotes": [
-            "warn",
+            "error",
             "double"
         ],
         "semi": [
-            "warn",
+            "error",
             "always"
         ],
         "no-console": 0, // allow console.log etc
         "no-extra-boolean-cast": 0, // allow using !! to cast to boolean
-        "no-unused-vars": ["warn",
+        "no-unused-vars": ["error",
             {
                 "vars": "all", // no unused variables in any scope
                 // allow trailing unused args since functions may be called with
@@ -43,17 +45,16 @@ const eslintConfig = {
                 "args": "none"
             }
         ],
-        "no-trailing-spaces": ["warn"],
-        "curly": ["warn"],
-        "no-extend-native": ["warn"],
-        "prefer-const": ["warn"]
+        "no-trailing-spaces": ["error"],
+        "curly": ["error"],
+        "no-extend-native": ["error"],
+        "prefer-const": ["error"]
     }
 };
 // babel
 const babel = require('gulp-babel');
 // uglify (js)
 const uglify = require('gulp-uglify');
-const pump = require('pump');
 // uglify (es6)
 const uglifyes6 = require('gulp-uglify-es').default;
 // minify (css)
@@ -62,14 +63,14 @@ const cleanCSS = require('gulp-clean-css');
 const htmlmin = require('gulp-htmlmin');
 // minify (images)
 const imagemin = require('gulp-imagemin');
-// karma
-const Server = require('karma').Server;
+// jest (testing)
+const jest = require('jest');
 
 /*
     beautify task - beautify html, css, js in src folder
 */
 gulp.task('beautify', () =>
-    gulp.src(['src/*.css', 'src/*.html', 'src/*.js'])
+    gulp.src(['src/**/*.css', 'src/**/*.html', 'src/**/*.js'])
     .pipe(beautify())
     .pipe(gulp.dest('src'))
 );
@@ -77,9 +78,10 @@ gulp.task('beautify', () =>
 /*
     clean task - remove existing dist folder and its contents
 */
-gulp.task('clean:dist', function() {
+gulp.task('clean', function() {
     return del([
         'dist/**/*',
+        'test/coverage/**/*'
     ]);
 });
 
@@ -87,7 +89,7 @@ gulp.task('clean:dist', function() {
     ESLint task
 */
 gulp.task('lint', function() {
-    return gulp.src('src/*.js').pipe(eslint(eslintConfig))
+    return gulp.src('src/**/*.js').pipe(eslint(eslintConfig))
         .pipe(eslint.format())
         // Brick on failure to be super strict
         .pipe(eslint.failOnError());
@@ -97,20 +99,16 @@ gulp.task('lint', function() {
     gulp-uglify (js) task
 */
 gulp.task('uglify-js', function(callback) {
-    pump([
-            gulp.src('dist/*.js'),
-            uglify(),
-            gulp.dest('dist')
-        ],
-        callback
-    );
+    return gulp.src('dist/**/*.js')
+        .pipe(uglify())
+        .pipe(gulp.dest('dist'));
 });
 
 /*
     gulp-uglify (es6) task
 */
 gulp.task('uglify-es6', function() {
-    return gulp.src('src/*.js')
+    return gulp.src('src/**/*.js')
         .pipe(uglifyes6())
         .pipe(gulp.dest('dist'));
 });
@@ -119,7 +117,7 @@ gulp.task('uglify-es6', function() {
     gulp minify (css) task
 */
 gulp.task('minify-css', () => {
-    return gulp.src('src/*.css')
+    return gulp.src('src/**/*.css')
         .pipe(cleanCSS({
             compatibility: '*',
             level: 2
@@ -131,7 +129,7 @@ gulp.task('minify-css', () => {
     gulp minify (html) task
 */
 gulp.task('minify-html', () => {
-    return gulp.src('src/*.html')
+    return gulp.src('src/**/*.html')
         .pipe(htmlmin({
             collapseWhitespace: true
         }))
@@ -142,7 +140,7 @@ gulp.task('minify-html', () => {
     gulp minify (images) task
 */
 gulp.task('minify-images', () =>
-    gulp.src('src/images/*')
+    gulp.src('src/images/**/*')
     .pipe(imagemin([
         imagemin.gifsicle({
             interlaced: true
@@ -170,7 +168,7 @@ gulp.task('minify-images', () =>
     gulp-babel task
 */
 gulp.task('babel', () =>
-    gulp.src('src/*.js')
+    gulp.src('src/**/*.js')
     .pipe(babel({
         presets: ['@babel/env']
     }))
@@ -180,17 +178,12 @@ gulp.task('babel', () =>
 /*
     karma tasks
 */
-gulp.task('test', function(done) {
-    new Server({
-        configFile: __dirname + '/karma.conf.js',
-        singleRun: true
-    }, done()).start();
-});
-
-gulp.task('tdd', function(done) {
-    new Server({
-        configFile: __dirname + '/karmatdd.conf.js'
-    }, done()).start();
+gulp.task('test', function() {
+    return jest.runCLI({
+        config: {
+            rootDir: 'test/'
+        }
+    }, '.');
 });
 
 /*
@@ -200,7 +193,7 @@ gulp.task( // clean, lint, transpile to es5, uglify, and test
     'default',
     gulp.series(
         gulp.parallel(
-            'clean:dist',
+            'clean',
             'lint'
         ),
         'babel',
@@ -218,7 +211,7 @@ gulp.task( // same as default, but no uglify
     'pretty',
     gulp.series(
         gulp.parallel(
-            'clean:dist',
+            'clean',
             'lint'
         ),
         'babel',
@@ -230,7 +223,7 @@ gulp.task( // same as default, but leaves code in es6
     'es6',
     gulp.series(
         gulp.parallel(
-            'clean:dist',
+            'clean',
             'lint'
         ),
         gulp.parallel(
@@ -247,7 +240,7 @@ gulp.task( // skip linting and testing
     'build',
     gulp.series(
         gulp.parallel(
-            'clean:dist'
+            'clean'
         ),
         'babel',
         gulp.parallel(
@@ -263,7 +256,7 @@ gulp.task( // skip linting and testing, and leaves code in es6
     'buildes6',
     gulp.series(
         gulp.parallel(
-            'clean:dist'
+            'clean'
         ),
         gulp.parallel(
             'uglify-es6',

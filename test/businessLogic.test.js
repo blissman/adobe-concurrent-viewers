@@ -1,3 +1,5 @@
+require("../src/businessLogic.js");
+
 describe("businesslogic", () => {
 
     beforeEach(() => {
@@ -72,7 +74,10 @@ describe("businesslogic", () => {
             month: 5,
             year: 2019,
             startDate: "2019-03-12",
-            endDate: "2019-03-13"
+            endDate: "2019-03-13",
+            endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
+            reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
+            maxDataPoints: 2880 // this sets the limit on how many data points to pull (default is 2880)
         };
 
     const monthlyReport = {
@@ -82,7 +87,10 @@ describe("businesslogic", () => {
             month: 5,
             year: 2019,
             startDate: "2019-03-12",
-            endDate: "2019-03-13"
+            endDate: "2019-03-13",
+            endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
+            reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
+            maxDataPoints: 2880 // this sets the limit on how many data points to pull (default is 2880)
         };
 
 
@@ -140,7 +148,10 @@ describe("businesslogic", () => {
             month: 5,
             year: 2019,
             startDate: '2019-03-12',
-            endDate: '2019-03-13'
+            endDate: '2019-03-13',
+            reportTimeout: 30000,
+            maxDataPoints: 2880,
+            endpoint: "api.omniture.com"
         });
     });
 

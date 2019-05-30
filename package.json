@@ -1,48 +1,43 @@
 {
-  "name": "adobeanalyticstocsv",
-  "version": "1.0.0",
-  "description": "convert adobe analytics data to csv",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/blissman/adobeAnalyticsToCSV.git"
-  },
-  "keywords": [
-    "adobe",
-    "analytics"
-  ],
-  "author": "Bliss Man",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/blissman/adobeAnalyticsToCSV/issues"
-  },
-  "homepage": "https://github.com/blissman/adobeAnalyticsToCSV#readme",
-  "devDependencies": {
-    "@babel/core": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "@babel/register": "^7.4.4",
-    "del": "^4.1.1",
-    "file-system": "^2.2.2",
-    "gulp": "^4.0.2",
-    "gulp-babel": "^8.0.0",
-    "gulp-clean-css": "^4.2.0",
-    "gulp-eslint": "^5.0.0",
-    "gulp-htmlmin": "^5.0.1",
-    "gulp-imagemin": "^5.0.3",
-    "gulp-jsbeautifier": "^3.0.0",
-    "gulp-pump": "0.0.2",
-    "gulp-uglify": "^3.0.2",
-    "gulp-uglify-es": "^1.0.4",
-    "jasmine": "^3.4.0",
-    "jquery": "^3.4.1",
-    "jsdom": "^15.1.0",
-    "karma": "^4.1.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-jasmine": "^2.0.1",
-    "karma-parallel": "^0.3.1"
-  },
-  "dependencies": {}
+    "name": "gulpbuild",
+    "version": "1.2.0",
+    "description": "a starter repository for setting up gulp",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/blissman/gulpbuild.git"
+    },
+    "keywords": [
+        "gulp",
+        "testing"
+    ],
+    "author": "Bliss Man",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/blissman/gulpbuild/issues"
+    },
+    "homepage": "https://github.com/blissman/gulpbuild#readme",
+    "devDependencies": {
+        "@babel/core": "^7.4.5",
+        "@babel/preset-env": "^7.4.5",
+        "@babel/register": "^7.4.4",
+        "del": "^4.1.1",
+        "gulp": "^4.0.2",
+        "gulp-babel": "^8.0.0",
+        "gulp-clean-css": "^4.2.0",
+        "gulp-eslint": "^5.0.0",
+        "gulp-htmlmin": "^5.0.1",
+        "gulp-imagemin": "^5.0.3",
+        "gulp-jsbeautifier": "^3.0.0",
+        "gulp-uglify": "^3.0.2",
+        "gulp-uglify-es": "^1.0.4",
+        "jest": "^24.8.0"
+    },
+    "jest": {
+        "collectCoverage": true,
+        "coverageDirectory": "./test/coverage"
+    }
 }

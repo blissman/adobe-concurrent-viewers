@@ -30,8 +30,13 @@ node_modules
 
 # output files
 dist
+
+# coverage
+test/coverage
+
+# returned reports
 reports
 
-# user file
-src/config/user.js
+# config files
 src/config/report.js
+src/config/user.js
