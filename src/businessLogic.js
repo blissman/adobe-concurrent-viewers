@@ -31,9 +31,18 @@ window.parseData = {
     generateBody: (data) => {
         const report = data.report;
         let body = "";
+        let processObject = {};
         report.data.forEach((element) => {
             const unixTime = new Date(element.name).getTime()/1000;
-            body += element.name + "," + unixTime + "," + element.counts + "," + element.url + "\n";
+            processObject[unixTime] = {
+                "time": element.name,
+                "concurrentViewers": element.counts,
+                "URL": element.url
+            }
+        });
+        const timeArray = Object.keys(processObject);
+        timeArray.forEach((element) => {
+            body += processObject[element].time + "," + element + "," + processObject[element].concurrentViewers + "," + processObject[element].URL + "\n";
         });
         return body;
     }
