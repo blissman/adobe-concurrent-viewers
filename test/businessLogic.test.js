@@ -235,6 +235,31 @@ describe("businesslogic", () => {
     });
 
     it("should parse the data body into CSV format", () => {
-        expect(window.parseData.generateBody(data)).toEqual("00:23 2019-05-02,1556770980,236,\n00:24 2019-05-02,1556771040,237,\n00:25 2019-05-02,1556771100,236,\n00:26 2019-05-02,1556771160,235,\n");
+        const body = {
+            "1556770980": {
+                "URL": "",
+                "concurrentViewers": ["236"],
+                "time": "00:23 2019-05-02"
+            },
+            "1556771040": {
+                "URL": "",
+                "concurrentViewers": ["237"],
+                "time": "00:24 2019-05-02"
+            },
+            "1556771100": {
+                "URL": "",
+                "concurrentViewers": ["236"],
+                "time": "00:25 2019-05-02"
+            },
+            "1556771160": {
+                "URL": "",
+                "concurrentViewers": ["235"],
+                "time": "00:26 2019-05-02"
+            }
+        };
+
+        const report = "00:23 2019-05-02,1556770980,236,\n00:24 2019-05-02,1556771040,237,\n00:25 2019-05-02,1556771100,236,\n00:26 2019-05-02,1556771160,235,\n";
+        expect(window.parseData.generateBody(data)).toEqual(body);
+        expect(window.parseData.generateReport(body)).toEqual(report);
     });
 });
