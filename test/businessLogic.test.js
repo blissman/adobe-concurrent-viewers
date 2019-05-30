@@ -82,7 +82,7 @@ describe("businesslogic", () => {
 
     const monthlyReport = {
             rsid: "testrsid",
-            segmentId: "s311108103_5cccaa0d85d04262783da2e6",
+            segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
             type: "monthly",
             month: 5,
             year: 2019,
@@ -90,7 +90,7 @@ describe("businesslogic", () => {
             endDate: "2019-03-13",
             endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
             reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
-            maxDataPoints: 2880 // this sets the limit on how many data points to pull (default is 2880)
+            maxDataPoints: 5000 // this sets the limit on how many data points to pull (default is 2880)
         };
 
 
@@ -124,6 +124,18 @@ describe("businesslogic", () => {
 
     it("should return a body object if getReport.requestBody() is called with a report config object set", () => {
         expect(window.getReport.requestBody(report)).toEqual(result);
+    });
+
+    it("should return a monthly body object if getReport.requestBody() is called with a report config object set", () => {
+        expect(window.getReport.requestBody(monthlyReport)).toBeTruthy();
+        expect(window.getReport.requestBody(monthlyReport).length).toEqual(30);
+    });
+
+    it("should return false if segments argument is not an array", () => {
+        expect(window.utils.getSegments(1)).toBeFalsy();
+        expect(window.utils.getSegments("butts")).toBeFalsy();
+        expect(window.utils.getSegments({"this": false})).toBeFalsy();
+        expect(window.utils.getSegments(true)).toBeFalsy();
     });
 
     it("should return false if init is called with invalid user and/or report configurations", () => {

@@ -227,7 +227,8 @@ window.utils = {
         return months[month - 1];
     },
     getSegments: (segments) => {
-        if (!segments && typeof(segments) !== "array") {
+        if (!segments || !Array.isArray(segments)) {
+            console.log(typeof(segments));  
             return false;
         }
         const segmentsList = [];
