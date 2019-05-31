@@ -178,7 +178,7 @@ window.getReport = {
                         window.getReport.writeReport(reportConfig, data);
                     }, reportConfig.reportTimeout);
                 }
-                window.getReport.reportValue += window.parseData.generateBody(JSON.parse(data.responseText));
+                window.getReport.reportValue += window.parseData.generateReport(window.parseData.generateBody(JSON.parse(data.responseText)));
             } else if (retryCount >= retryLimit) {
                 console.log("Error: could not view report after " + retryLimit + " retries!");
             } else {
