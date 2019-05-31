@@ -10,7 +10,7 @@ window.MarketingCloud = {
 
         const request = new window.XMLHttpRequest();
 
-        return new Promise((resolve, reject) =>{
+        return new Promise((resolve, reject) => {
 
             request.onreadystatechange = () => {
 
