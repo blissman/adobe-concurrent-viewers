@@ -40,11 +40,18 @@ window.parseData = {
                 "URL": element.url
             }
         });
-        const timeArray = Object.keys(processObject);
+
+        return processObject;
+    },
+    generateReport: (body) => {
+        const timeArray = Object.keys(body);
+        let report = "";
+
         timeArray.forEach((element) => {
-            body += processObject[element].time + "," + element + "," + processObject[element].concurrentViewers + "," + processObject[element].URL + "\n";
+            report += body[element].time + "," + element + "," + body[element].concurrentViewers + "," + body[element].URL + "\n";
         });
-        return body;
+
+        return report;
     }
 };
 
