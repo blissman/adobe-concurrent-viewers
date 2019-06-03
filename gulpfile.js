@@ -81,7 +81,8 @@ gulp.task('beautify', () =>
 gulp.task('clean', function() {
     return del([
         'dist/**/*',
-        'test/coverage/**/*'
+        'test/coverage/**/*',
+        'reports/**/*'
     ]);
 });
 
