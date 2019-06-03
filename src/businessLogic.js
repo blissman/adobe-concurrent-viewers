@@ -33,7 +33,7 @@ window.parseData = {
         let body = "";
         let processObject = {};
         report.data.forEach((element) => {
-            const unixTime = new Date(element.name).getTime()/1000;
+            const unixTime = new Date(element.name).getTime() / 1000;
             processObject[unixTime] = {
                 "time": element.name,
                 "concurrentViewers": element.counts,
@@ -130,7 +130,7 @@ window.getReport = {
                         }],
                         "segments": window.utils.getSegments(segmentId),
                         "settings": {
-                            "limit":5
+                            "limit": 5
                         },
                         "locale": "en_US"
                     }
@@ -178,7 +178,7 @@ window.getReport = {
                         window.getReport.writeReport(reportConfig, data);
                     }, reportConfig.reportTimeout);
                 }
-                window.getReport.reportValue += window.parseData.generateBody(JSON.parse(data.responseText));
+                window.getReport.reportValue += window.parseData.generateReport(window.parseData.generateBody(JSON.parse(data.responseText)));
             } else if (retryCount >= retryLimit) {
                 console.log("Error: could not view report after " + retryLimit + " retries!");
             } else {
@@ -244,12 +244,14 @@ window.utils = {
     },
     getSegments: (segments) => {
         if (!segments || !Array.isArray(segments)) {
-            console.log(typeof(segments));  
+            console.log(typeof(segments));
             return false;
         }
         const segmentsList = [];
         segments.forEach((element) => {
-            segmentsList.push({"id": element});
+            segmentsList.push({
+                "id": element
+            });
         });
 
         return segmentsList;
