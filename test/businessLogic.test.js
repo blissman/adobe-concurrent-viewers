@@ -62,6 +62,58 @@ describe("businesslogic", () => {
         "runSeconds": 0
     };
 
+    const duplicateData = {
+        "report": {
+            "type": "ranked",
+            "elements": [{
+                "id": "videoconcurrentviewers",
+                "name": "Video Concurrent Viewers"
+            }],
+            "reportSuite": {
+                "id": "bellmediatsnprod",
+                "name": "TSN - Prod"
+            },
+            "period": "Thu.  2 May 2019 - Fri.  3 May 2019",
+            "metrics": [{
+                "id": "instances",
+                "name": "Instances",
+                "type": "number",
+                "decimals": 0,
+                "latency": 2602,
+                "current": false
+            }],
+            "segments": [{
+                "id": "s300008103_5cccaa0d85d04262783da2e6",
+                "name": "TSN Live Streams"
+            }],
+            "data": [{
+                "name": "00:24 2019-05-02",
+                "url": "",
+                "counts": ["237"]
+            }, {
+                "name": "00:26 2019-05-02",
+                "url": "",
+                "counts": ["235"]
+            }, {
+                "name": "00:25 2019-05-02",
+                "url": "",
+                "counts": ["236"]
+            }, {
+                "name": "00:25 2019-05-02",
+                "url": "",
+                "counts": ["15"]
+            }, {
+                "name": "00:23 2019-05-02",
+                "url": "",
+                "counts": ["236"]
+            }],
+            "totals": ["321749"],
+            "version": "1.4.18.10"
+        },
+        "waitSeconds": 0,
+        "runSeconds": 0
+    };
+
     const user = {
             name: "gerald.butts@canada.ca:Federal Government",
             sharedSecret: "0be47a0a1aab316891eeae4e6555551b"
@@ -260,6 +312,35 @@ describe("businesslogic", () => {
 
         const report = "00:23 2019-05-02,1556770980,236,\n00:24 2019-05-02,1556771040,237,\n00:25 2019-05-02,1556771100,236,\n00:26 2019-05-02,1556771160,235,\n";
         expect(window.parseData.generateBody(data)).toEqual(body);
+        expect(window.parseData.generateReport(body)).toEqual(report);
+    });
+
+    it("should parse the data body into CSV format without duplicating times", () => {
+        const body = {
+            "1556770980": {
+                "URL": "",
+                "concurrentViewers": ["236"],
+                "time": "00:23 2019-05-02"
+            },
+            "1556771040": {
+                "URL": "",
+                "concurrentViewers": ["237"],
+                "time": "00:24 2019-05-02"
+            },
+            "1556771100": {
+                "URL": "",
+                "concurrentViewers": ["15"],
+                "time": "00:25 2019-05-02"
+            },
+            "1556771160": {
+                "URL": "",
+                "concurrentViewers": ["235"],
+                "time": "00:26 2019-05-02"
+            }
+        };
+
+        const report = "00:23 2019-05-02,1556770980,236,\n00:24 2019-05-02,1556771040,237,\n00:25 2019-05-02,1556771100,15,\n00:26 2019-05-02,1556771160,235,\n";
+        expect(window.parseData.generateBody(duplicateData)).toEqual(body);
         expect(window.parseData.generateReport(body)).toEqual(report);
     });
 });
