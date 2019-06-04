@@ -33,7 +33,7 @@ window.parseData = {
         let body = "";
         let processObject = {};
         report.data.forEach((element) => {
-            const unixTime = new Date(element.name).getTime()/1000;
+            const unixTime = new Date(element.name).getTime() / 1000;
             processObject[unixTime] = {
                 "time": element.name,
                 "concurrentViewers": element.counts,
@@ -126,12 +126,10 @@ window.getReport = {
                         }],
                         "elements": [{
                             "id": "videoconcurrentviewers",
-                            "top": "2880"
+                            "top": reportConfig.maxDataPoints.toString()
                         }],
                         "segments": window.utils.getSegments(segmentId),
-                        "settings": {
-                            "limit":5
-                        },
+                        "sortBy": "instances",
                         "locale": "en_US"
                     }
                 };
@@ -244,12 +242,14 @@ window.utils = {
     },
     getSegments: (segments) => {
         if (!segments || !Array.isArray(segments)) {
-            console.log(typeof(segments));  
+            console.log(typeof(segments));
             return false;
         }
         const segmentsList = [];
         segments.forEach((element) => {
-            segmentsList.push({"id": element});
+            segmentsList.push({
+                "id": element
+            });
         });
 
         return segmentsList;
