@@ -1,4 +1,4 @@
-window.utils = {
+utils = {
     getDays: (month, year) => {
         if (!month || !year || typeof(month) !== "number" || typeof(year) !== "number" || month < 1 || month > 12) {
             console.log("Error: month or year is invalid!");
@@ -35,3 +35,5 @@ window.utils = {
         return segmentsList;
     }
 };
+
+module.exports = utils;

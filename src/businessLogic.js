@@ -1,4 +1,4 @@
-require("./utils.js");
+const utils = require("./utils.js");
 
 window.parseData = {
     generateHeader: (data, reportConfig) => {
@@ -10,7 +10,7 @@ window.parseData = {
         header += ",name," + report.reportSuite.name + "\n";
         header += "Period,";
         if (reportConfig && reportConfig.type === "monthly") {
-            header += window.utils.getMonthName(reportConfig.month) + " - " + reportConfig.year + "\n";
+            header += utils.getMonthName(reportConfig.month) + " - " + reportConfig.year + "\n";
         } else {
             header += report.period + "\n";
         }
@@ -85,7 +85,7 @@ window.getReport = {
                         "id": "videoconcurrentviewers",
                         "top": reportConfig.maxDataPoints.toString()
                     }],
-                    "segments": window.utils.getSegments(segmentId),
+                    "segments": utils.getSegments(segmentId),
                     "sortBy": "instances",
                     "locale": "en_US"
                 }
@@ -94,7 +94,7 @@ window.getReport = {
         } else if (type === "monthly") {
             const reportYear = reportConfig.year;
             const reportMonth = reportConfig.month;
-            const totalDays = window.utils.getDays(reportMonth, reportYear);
+            const totalDays = utils.getDays(reportMonth, reportYear);
             const yearValue = reportYear.toString();
             let monthValue;
             if (reportMonth.toString().length === 1) {
@@ -130,7 +130,7 @@ window.getReport = {
                             "id": "videoconcurrentviewers",
                             "top": reportConfig.maxDataPoints.toString()
                         }],
-                        "segments": window.utils.getSegments(segmentId),
+                        "segments": utils.getSegments(segmentId),
                         "sortBy": "instances",
                         "locale": "en_US"
                     }
@@ -207,7 +207,7 @@ window.getReport = {
         if (type === "daily") {
             reportName = segmentName + " - " + reportData.period;
         } else if (type === "monthly") {
-            reportName = segmentName + " - " + window.utils.getMonthName(reportConfig.month) + ", " + reportConfig.year;
+            reportName = segmentName + " - " + utils.getMonthName(reportConfig.month) + ", " + reportConfig.year;
         }
 
         window.fs.writeFile("./reports/" + reportName + ".csv", window.getReport.reportValue, (err, data) => {
