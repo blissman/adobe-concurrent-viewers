@@ -1,4 +1,5 @@
 const utils = require("./utils.js");
+const MarketingCloud = require("./adobeDependencies/marketing_cloud.js");
 
 const parseData = {
     generateHeader: (data, reportConfig) => {
@@ -148,7 +149,7 @@ const getReport = {
 
         const requestBodies = getReport.requestBody(reportConfig);
         requestBodies.forEach((element) => {
-            window.MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Queue", element).then((data) => {
+            MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Queue", element).then((data) => {
                 const reportID = JSON.parse(data.responseText).reportID;
                 element.reportID = reportID;
                 console.log(element);
@@ -163,7 +164,7 @@ const getReport = {
 
     },
     fetch: (userConfig, reportConfig, body) => {
-        window.MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Get", body).then((data) => {
+        MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Get", body).then((data) => {
             let retryCount = 0;
             const retryLimit = 3;
             if (JSON.parse(data.responseText).error === "report_not_ready" && retryCount < retryLimit) {

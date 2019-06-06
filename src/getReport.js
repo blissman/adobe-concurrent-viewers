@@ -23,8 +23,8 @@ window.fs = require("file-system");
 global.jQuery = require("jquery");
 require("./adobeDependencies/wsse.js");
 require("./adobeDependencies/marketing_cloud.js");
-require("./config/user.js");
-require("./config/report.js");
+const user = require("./config/user.js");
+const report = require("./config/report.js");
 const businessLogic = require("./businessLogic.js");
 
-businessLogic.getReport.init(window.user, window.report);
+businessLogic.getReport.init(user, report);

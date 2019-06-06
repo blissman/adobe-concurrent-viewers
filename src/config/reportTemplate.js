@@ -1,4 +1,4 @@
-window.report = {
+const report = {
     rsid: "exampleRSID", // your RSID name
     segmentId: ["someSegmentId"], // insert your segment ids here as an array of strings, otherwise an empty string for no segment (note: this combines segments--it does not run them separately)
     type: "daily", // can be daily or monthly
@@ -10,3 +10,5 @@ window.report = {
     reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
     maxDataPoints: 2880 // this sets the limit on how many data points to pull (default is 2880, increase to get more data points)
 };
+
+module.exports = report;
