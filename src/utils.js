@@ -33,6 +33,27 @@ utils = {
         });
 
         return segmentsList;
+    },
+    makeRequest: (url, method) => {
+        const request = new window.XMLHttpRequest();
+
+        return new Promise((resolve, reject) => {
+            request.onreadystatechange = () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status >= 200 && request.status < 300) {
+                    resolve(request);
+                } else {
+                    reject({
+                        status: request.status,
+                        statusText: request.statusText
+                    });
+                }
+            };
+            request.open(method || "GET", url, true);
+            request.send();
+        });
     }
 };
 

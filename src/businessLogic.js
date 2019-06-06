@@ -34,15 +34,14 @@ const parseData = {
     },
     generateBody: (data) => {
         const report = data.report;
-        let body = "";
-        let processObject = {};
+        const processObject = {};
         report.data.forEach((element) => {
             const unixTime = new Date(element.name).getTime() / 1000;
             processObject[unixTime] = {
                 "time": element.name,
                 "concurrentViewers": element.counts,
                 "URL": element.url
-            }
+            };
         });
 
         return processObject;
@@ -154,7 +153,6 @@ const getReport = {
                 const reportID = JSON.parse(data.responseText).reportID;
                 element.reportID = reportID;
                 console.log(element);
-                // get the report
                 window.setTimeout(() => {
                     getReport.fetch(userConfig, reportConfig, element);
                 }, reportConfig.reportTimeout);
