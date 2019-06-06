@@ -25,6 +25,6 @@ require("./adobeDependencies/wsse.js");
 require("./adobeDependencies/marketing_cloud.js");
 require("./config/user.js");
 require("./config/report.js");
-require("./businessLogic.js");
+const businessLogic = require("./businessLogic.js");
 
-window.getReport.init(window.user, window.report);
+businessLogic.getReport.init(window.user, window.report);

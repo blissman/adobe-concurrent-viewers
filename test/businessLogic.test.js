@@ -1,10 +1,10 @@
-require("../src/businessLogic.js");
+const businessLogic = require("../src/businessLogic.js");
 
 describe("businesslogic", () => {
 
     beforeEach(() => {
-        spyOn(window.getReport, "requestBody").and.callThrough();
-        spyOn(window.getReport, "fetch").and.callThrough();
+        spyOn(businessLogic.getReport, "requestBody").and.callThrough();
+        spyOn(businessLogic.getReport, "fetch").and.callThrough();
         window.MarketingCloud = {};
         window.MarketingCloud.makeRequest = () => {
             return new Promise((resolve, reject) => {
@@ -167,38 +167,38 @@ describe("businesslogic", () => {
     }];
 
     it("should return false if getReport.requestBody() is called without a report config object", () => {
-        expect(window.getReport.requestBody(undefined)).toBeFalsy();
-        expect(window.getReport.requestBody(null)).toBeFalsy();
-        expect(window.getReport.requestBody(() => {})).toBeFalsy();
-        expect(window.getReport.requestBody(32)).toBeFalsy();
-        expect(window.getReport.requestBody("string")).toBeFalsy();
+        expect(businessLogic.getReport.requestBody(undefined)).toBeFalsy();
+        expect(businessLogic.getReport.requestBody(null)).toBeFalsy();
+        expect(businessLogic.getReport.requestBody(() => {})).toBeFalsy();
+        expect(businessLogic.getReport.requestBody(32)).toBeFalsy();
+        expect(businessLogic.getReport.requestBody("string")).toBeFalsy();
     });
 
     it("should return a body object if getReport.requestBody() is called with a report config object set", () => {
-        expect(window.getReport.requestBody(report)).toEqual(result);
+        expect(businessLogic.getReport.requestBody(report)).toEqual(result);
     });
 
     it("should return a monthly body object if getReport.requestBody() is called with a report config object set", () => {
-        expect(window.getReport.requestBody(monthlyReport)).toBeTruthy();
-        expect(window.getReport.requestBody(monthlyReport).length).toEqual(30);
+        expect(businessLogic.getReport.requestBody(monthlyReport)).toBeTruthy();
+        expect(businessLogic.getReport.requestBody(monthlyReport).length).toEqual(30);
     });
 
     it("should return false if init is called with invalid user and/or report configurations", () => {
-        expect(window.getReport.init(undefined, report)).toBeFalsy();
-        expect(window.getReport.init(null, report)).toBeFalsy();
-        expect(window.getReport.init(() => {}, report)).toBeFalsy();
-        expect(window.getReport.init(32, report)).toBeFalsy();
-        expect(window.getReport.init("string", report)).toBeFalsy();
-        expect(window.getReport.init(user, undefined)).toBeFalsy();
-        expect(window.getReport.init(user, null)).toBeFalsy();
-        expect(window.getReport.init(user, () => {})).toBeFalsy();
-        expect(window.getReport.init(user, 32)).toBeFalsy();
-        expect(window.getReport.init(user, "string")).toBeFalsy();
+        expect(businessLogic.getReport.init(undefined, report)).toBeFalsy();
+        expect(businessLogic.getReport.init(null, report)).toBeFalsy();
+        expect(businessLogic.getReport.init(() => {}, report)).toBeFalsy();
+        expect(businessLogic.getReport.init(32, report)).toBeFalsy();
+        expect(businessLogic.getReport.init("string", report)).toBeFalsy();
+        expect(businessLogic.getReport.init(user, undefined)).toBeFalsy();
+        expect(businessLogic.getReport.init(user, null)).toBeFalsy();
+        expect(businessLogic.getReport.init(user, () => {})).toBeFalsy();
+        expect(businessLogic.getReport.init(user, 32)).toBeFalsy();
+        expect(businessLogic.getReport.init(user, "string")).toBeFalsy();
     });
 
     it("should generate a request body if init is called with valid user and report configurations", () => {
-        window.getReport.init(user, report);
-        expect(window.getReport.requestBody).toHaveBeenCalledWith({
+        businessLogic.getReport.init(user, report);
+        expect(businessLogic.getReport.requestBody).toHaveBeenCalledWith({
             rsid: 'testrsid',
             segmentId: ['s311108103_5cccaa0d85d04262783da2e6'],
             type: "daily",
@@ -213,8 +213,8 @@ describe("businesslogic", () => {
     });
 
     it("should generate different header values for monthly and daily reports", () => {
-        expect(window.parseData.generateHeader(data, report)).toEqual("Type,ranked\nElements,Video Concurrent Viewers\nReport Suite,id,bellmediatsnprod\n,name,TSN - Prod\nPeriod,Thu.  2 May 2019 - Fri.  3 May 2019\nSegments,id,s300008103_5cccaa0d85d04262783da2e6 \n,Name,TSN Live Streams \nData\nTime,Unix Timestamp,Count,URL\n");
-        expect(window.parseData.generateHeader(data, monthlyReport)).toEqual("Type,ranked\nElements,Video Concurrent Viewers\nReport Suite,id,bellmediatsnprod\n,name,TSN - Prod\nPeriod,May - 2019\nSegments,id,s300008103_5cccaa0d85d04262783da2e6 \n,Name,TSN Live Streams \nData\nTime,Unix Timestamp,Count,URL\n");
+        expect(businessLogic.parseData.generateHeader(data, report)).toEqual("Type,ranked\nElements,Video Concurrent Viewers\nReport Suite,id,bellmediatsnprod\n,name,TSN - Prod\nPeriod,Thu.  2 May 2019 - Fri.  3 May 2019\nSegments,id,s300008103_5cccaa0d85d04262783da2e6 \n,Name,TSN Live Streams \nData\nTime,Unix Timestamp,Count,URL\n");
+        expect(businessLogic.parseData.generateHeader(data, monthlyReport)).toEqual("Type,ranked\nElements,Video Concurrent Viewers\nReport Suite,id,bellmediatsnprod\n,name,TSN - Prod\nPeriod,May - 2019\nSegments,id,s300008103_5cccaa0d85d04262783da2e6 \n,Name,TSN Live Streams \nData\nTime,Unix Timestamp,Count,URL\n");
     });
 
 
@@ -243,8 +243,8 @@ describe("businesslogic", () => {
         };
 
         const report = "00:23 2019-05-02,1556770980,236,\n00:24 2019-05-02,1556771040,237,\n00:25 2019-05-02,1556771100,236,\n00:26 2019-05-02,1556771160,235,\n";
-        expect(window.parseData.generateBody(data)).toEqual(body);
-        expect(window.parseData.generateReport(body)).toEqual(report);
+        expect(businessLogic.parseData.generateBody(data)).toEqual(body);
+        expect(businessLogic.parseData.generateReport(body)).toEqual(report);
     });
 
     it("should parse the data body into CSV format without duplicating times", () => {
@@ -272,7 +272,7 @@ describe("businesslogic", () => {
         };
 
         const report = "00:23 2019-05-02,1556770980,236,\n00:24 2019-05-02,1556771040,237,\n00:25 2019-05-02,1556771100,15,\n00:26 2019-05-02,1556771160,235,\n";
-        expect(window.parseData.generateBody(duplicateData)).toEqual(body);
-        expect(window.parseData.generateReport(body)).toEqual(report);
+        expect(businessLogic.parseData.generateBody(duplicateData)).toEqual(body);
+        expect(businessLogic.parseData.generateReport(body)).toEqual(report);
     });
 });

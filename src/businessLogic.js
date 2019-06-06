@@ -1,6 +1,6 @@
 const utils = require("./utils.js");
 
-window.parseData = {
+const parseData = {
     generateHeader: (data, reportConfig) => {
         const report = data.report;
         let header = "";
@@ -57,7 +57,7 @@ window.parseData = {
     }
 };
 
-window.getReport = {
+const getReport = {
     reportValue: "",
     requestBody: (reportConfig) => {
         if (!reportConfig || typeof(reportConfig) !== "object") {
@@ -146,7 +146,7 @@ window.getReport = {
             return false;
         }
 
-        const requestBodies = window.getReport.requestBody(reportConfig);
+        const requestBodies = getReport.requestBody(reportConfig);
         requestBodies.forEach((element) => {
             window.MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Queue", element).then((data) => {
                 const reportID = JSON.parse(data.responseText).reportID;
@@ -154,7 +154,7 @@ window.getReport = {
                 console.log(element);
                 // get the report
                 window.setTimeout(() => {
-                    window.getReport.fetch(userConfig, reportConfig, element);
+                    getReport.fetch(userConfig, reportConfig, element);
                 }, reportConfig.reportTimeout);
             }).catch((error) => {
                 console.log(error);
@@ -168,17 +168,17 @@ window.getReport = {
             const retryLimit = 3;
             if (JSON.parse(data.responseText).error === "report_not_ready" && retryCount < retryLimit) {
                 setTimeout(() => {
-                    window.getReport.fetch(userConfig, reportConfig, body);
+                    getReport.fetch(userConfig, reportConfig, body);
                 }, reportConfig.reportTimeout);
                 retryCount++;
             } else if (data.responseText && JSON.parse(data.responseText).report) {
-                if (window.getReport.reportValue === "") {
-                    window.getReport.reportValue += window.parseData.generateHeader(JSON.parse(data.responseText), reportConfig);
+                if (getReport.reportValue === "") {
+                    getReport.reportValue += parseData.generateHeader(JSON.parse(data.responseText), reportConfig);
                     window.setTimeout(() => {
-                        window.getReport.writeReport(reportConfig, data);
+                        getReport.writeReport(reportConfig, data);
                     }, reportConfig.reportTimeout);
                 }
-                window.getReport.reportValue += window.parseData.generateReport(window.parseData.generateBody(JSON.parse(data.responseText)));
+                getReport.reportValue += parseData.generateReport(parseData.generateBody(JSON.parse(data.responseText)));
             } else if (retryCount >= retryLimit) {
                 console.log("Error: could not view report after " + retryLimit + " retries!");
             } else {
@@ -210,12 +210,15 @@ window.getReport = {
             reportName = segmentName + " - " + utils.getMonthName(reportConfig.month) + ", " + reportConfig.year;
         }
 
-        window.fs.writeFile("./reports/" + reportName + ".csv", window.getReport.reportValue, (err, data) => {
+        window.fs.writeFile("./reports/" + reportName + ".csv", getReport.reportValue, (err, data) => {
             if (err) {
                 console.log(err);
             }
         });
 
-        return window.getReport.reportValue;
+        return getReport.reportValue;
     }
 };
+
+module.exports.getReport = getReport;
+module.exports.parseData = parseData;
