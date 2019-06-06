@@ -1,5 +1,6 @@
 const utils = require("./utils.js");
 const MarketingCloud = require("./adobeDependencies/marketing_cloud.js");
+const fs = require("file-system");
 
 const parseData = {
     generateHeader: (data, reportConfig) => {
@@ -211,7 +212,7 @@ const getReport = {
             reportName = segmentName + " - " + utils.getMonthName(reportConfig.month) + ", " + reportConfig.year;
         }
 
-        window.fs.writeFile("./reports/" + reportName + ".csv", getReport.reportValue, (err, data) => {
+        fs.writeFile("./reports/" + reportName + ".csv", getReport.reportValue, (err, data) => {
             if (err) {
                 console.log(err);
             }
