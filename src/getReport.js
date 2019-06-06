@@ -6,6 +6,5 @@ global.document = document;
 const user = require("./config/user.js");
 const report = require("./config/report.js");
 const businessLogic = require("./businessLogic.js");
-const utils = require("./utils.js");
 
 businessLogic.getReport.init(user, report);
