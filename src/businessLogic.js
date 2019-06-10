@@ -169,12 +169,12 @@ const getReport = {
                             showName: showName,
                             showDescription: showDescription,
                             startTime: startTime
-                        }
+                        };
                         console.log(returnArrayElement);
                         returnArray.push(returnArrayElement);
                     });
 
-                    return reutrnArray;
+                    return returnArray;
                 }
             ).catch(
                 (error) => {
