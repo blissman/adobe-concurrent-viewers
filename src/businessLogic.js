@@ -146,21 +146,56 @@ const getReport = {
             console.log("Error: user or report config is invalid!");
             return false;
         }
-
         const requestBodies = getReport.requestBody(reportConfig);
         requestBodies.forEach((element) => {
-            MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Queue", element).then((data) => {
-                const reportID = JSON.parse(data.responseText).reportID;
-                element.reportID = reportID;
-                console.log(element);
-                window.setTimeout(() => {
-                    getReport.fetch(userConfig, reportConfig, element);
-                }, reportConfig.reportTimeout);
-            }).catch((error) => {
-                console.log(error);
-            });
+            getReport.checkCapi(reportConfig, element);
+            getReport.checkAdobe(userConfig, reportConfig, "Report.Queue", element);
         });
 
+    },
+    checkCapi: (reportConfig, requestBody) => {
+        if (reportConfig && reportConfig.capi && reportConfig.capi.isEnabled && typeof(reportConfig.capi.channel) === "string") {
+            const URL = "http://capi.9c9media.com/destinations/tsn_web/platforms/desktop/channelaffiliates/" + reportConfig.capi.channel + "-G/schedules?StartTime=" + requestBody.reportDescription.dateFrom + "T00:00:00&EndTime=" + requestBody.reportDescription.dateTo + "T00:00:00";
+            utils.makeRequest(URL).then(
+                (data) => {
+                    const returnArray = [];
+                    const scheduleArray = JSON.parse(data.responseText).Items;
+
+                    scheduleArray.forEach((element) => {
+                        const showName = element.Name + " - " + element.Title;
+                        const showDescription = element.Desc;
+                        const startTime = new Date(element.StartTime).getTime()/1000;
+                        const returnArrayElement = {
+                            showName: showName,
+                            showDescription: showDescription,
+                            startTime: startTime
+                        }
+                        console.log(returnArrayElement);
+                        returnArray.push(returnArrayElement);
+                    });
+
+                    return reutrnArray;
+                }
+            ).catch(
+                (error) => {
+                    console.log(error);
+                }
+            );
+        } else {
+            return Promise.resolve(false);
+        }
+    },
+    checkAdobe: (userConfig, reportConfig, reportType, requestBody) => {
+        MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Queue", requestBody).then((data) => {
+            const reportID = JSON.parse(data.responseText).reportID;
+            requestBody.reportID = reportID;
+            console.log(requestBody);
+            window.setTimeout(() => {
+                getReport.fetch(userConfig, reportConfig, requestBody);
+            }, reportConfig.reportTimeout);
+        }).catch((error) => {
+            console.log(error);
+        });
     },
     fetch: (userConfig, reportConfig, body) => {
         MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Get", body).then((data) => {

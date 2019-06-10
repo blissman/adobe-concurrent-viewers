@@ -1,6 +1,12 @@
-const { JSDOM } = require("jsdom");
-const { window } = new JSDOM();
-const { document } = window;
+const {
+    JSDOM
+} = require("jsdom");
+const {
+    window
+} = new JSDOM();
+const {
+    document
+} = window;
 global.window = window;
 global.document = document;
 const user = require("./config/user.js");
