@@ -148,8 +148,12 @@ const getReport = {
         }
         const requestBodies = getReport.requestBody(reportConfig);
         requestBodies.forEach((element) => {
-            getReport.checkCapi(reportConfig, element);
-            getReport.checkAdobe(userConfig, reportConfig, "Report.Queue", element);
+            const capiResponse = getReport.checkCapi(reportConfig, element);
+            const adobeResponse = getReport.checkAdobe(userConfig, reportConfig, "Report.Queue", element);
+
+            Promise.all([capiResponse, adobeResponse]).then((values) => {
+                console.log(values)
+            });
         });
 
     },
@@ -170,7 +174,7 @@ const getReport = {
                             showDescription: showDescription,
                             startTime: startTime
                         };
-                        console.log(returnArrayElement);
+
                         returnArray.push(returnArrayElement);
                     });
 
@@ -207,13 +211,14 @@ const getReport = {
                 }, reportConfig.reportTimeout);
                 retryCount++;
             } else if (data.responseText && JSON.parse(data.responseText).report) {
-                if (getReport.reportValue === "") {
-                    getReport.reportValue += parseData.generateHeader(JSON.parse(data.responseText), reportConfig);
-                    window.setTimeout(() => {
-                        getReport.writeReport(reportConfig, data);
-                    }, reportConfig.reportTimeout);
-                }
-                getReport.reportValue += parseData.generateReport(parseData.generateBody(JSON.parse(data.responseText)));
+                return JSON.parse(data.responseText);
+                // if (getReport.reportValue === "") {
+                //     getReport.reportValue += parseData.generateHeader(JSON.parse(data.responseText), reportConfig);
+                //     window.setTimeout(() => {
+                //         getReport.writeReport(reportConfig, data);
+                //     }, reportConfig.reportTimeout);
+                // }
+                // getReport.reportValue += parseData.generateReport(parseData.generateBody(JSON.parse(data.responseText)));
             } else if (retryCount >= retryLimit) {
                 console.log("Error: could not view report after " + retryLimit + " retries!");
             } else {
