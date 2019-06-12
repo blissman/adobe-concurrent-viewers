@@ -23,18 +23,31 @@ const getReport = {
                 reportBodies.push(reportBody);
             });
         });
-        reportBodies.forEach((element) => {
-            const capiResponse = getReport.checkCapi(reportConfig, element);
-            const adobeResponse = getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", element).then((requestBody) => {
-                window.setTimeout(() => {
-                    getReport.getAdobe(userConfig, reportConfig, requestBody).then((data) => {
-                        return data;
-                    });
-                }, reportConfig.reportTimeout);
-            });
 
+        reportBodies.forEach((body) => {
+            console.log(body);
+        });
+        // get the capi schedules for each report
+        reportBodies.forEach((reportBody) => {
+            getReport.checkCapi(reportConfig, reportBody).then((schedule) => {
+                capiSchedules.push(schedule);
+            });
         });
 
+        reportBodies.forEach((reportBody) => {
+            console.log(reportBody);
+        });
+
+        capiSchedules.forEach((schedule) => {
+            console.log(schedule);
+        });
+        // const adobeResponse = getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", element).then((requestBody) => {
+        //     window.setTimeout(() => {
+        //         getReport.getAdobe(userConfig, reportConfig, requestBody).then((data) => {
+        //             return data;
+        //         });
+        //     }, reportConfig.reportTimeout);
+        // });
     },
     requestBody: (reportConfig) => {
         if (!reportConfig || typeof(reportConfig) !== "object") {
@@ -211,4 +224,4 @@ const getReport = {
     }
 };
 
-module.exports.getReport = getReport;
+module.exports = getReport;
