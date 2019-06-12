@@ -5,6 +5,37 @@ const parseData = require("./parseData.js");
 
 const getReport = {
     reportValue: "",
+    init: (userConfig, reportConfig) => {
+        // guard against bad configs
+        if (!userConfig || typeof(userConfig) !== "object" || !reportConfig || typeof(reportConfig) !== "object") {
+            console.log("Error: user or report config is invalid!");
+            return false;
+        }
+        // generate request bodies from the config
+        const requestBodies = getReport.requestBody(reportConfig);
+        // request bodies including reportID returned from Adobe's report queue call
+        const reportBodies = [];
+        // capi schedule for each day
+        const capiSchedules = [];
+        // queue each report with Adobe 
+        requestBodies.forEach((requestBody) => {
+            getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", requestBody).then((reportBody) => {
+                reportBodies.push(reportBody);
+            });
+        });
+        reportBodies.forEach((element) => {
+            const capiResponse = getReport.checkCapi(reportConfig, element);
+            const adobeResponse = getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", element).then((requestBody) => {
+                window.setTimeout(() => {
+                    getReport.getAdobe(userConfig, reportConfig, requestBody).then((data) => {
+                        return data;
+                    });
+                }, reportConfig.reportTimeout);
+            });
+
+        });
+
+    },
     requestBody: (reportConfig) => {
         if (!reportConfig || typeof(reportConfig) !== "object") {
             console.log("Error: report config object is not ready!");
@@ -85,33 +116,6 @@ const getReport = {
             }
         }
         return bodyArray;
-    },
-    init: (userConfig, reportConfig) => {
-        // guard against bad configs
-        if (!userConfig || typeof(userConfig) !== "object" || !reportConfig || typeof(reportConfig) !== "object") {
-            console.log("Error: user or report config is invalid!");
-            return false;
-        }
-        // generate request bodies from the config
-        const requestBodies = getReport.requestBody(reportConfig);
-        // for each request body, get the associated capi schedule and Adobe Report
-        requestBodies.forEach((element) => {
-            const capiResponse = getReport.checkCapi(reportConfig, element);
-            const adobeResponse = getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", element).then((requestBody) => {
-                window.setTimeout(() => {
-                    getReport.getAdobe(userConfig, reportConfig, requestBody).then((data) => {
-                        return data;
-                    });
-                }, reportConfig.reportTimeout);
-            });
-
-            Promise.all([capiResponse, adobeResponse]).then((values) => {
-                // add capi values to a master object
-                // add Adobe values to a master object
-                console.log(values)
-            });
-        });
-
     },
     checkCapi: (reportConfig, requestBody) => {
         return new Promise((resolve, reject) => {
