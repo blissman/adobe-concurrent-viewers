@@ -1,62 +1,7 @@
 const utils = require("./utils.js");
 const MarketingCloud = require("./adobeDependencies/marketing_cloud.js");
 const fs = require("file-system");
-
-const parseData = {
-    generateHeader: (data, reportConfig) => {
-        const report = data.report;
-        let header = "";
-        header += "Type," + report.type + "\n";
-        header += "Elements," + report.elements[0].name + "\n";
-        header += "Report Suite,id," + report.reportSuite.id + "\n";
-        header += ",name," + report.reportSuite.name + "\n";
-        header += "Period,";
-        if (reportConfig && reportConfig.type === "monthly") {
-            header += utils.getMonthName(reportConfig.month) + " - " + reportConfig.year + "\n";
-        } else {
-            header += report.period + "\n";
-        }
-        if (report.segments) {
-            header += "Segments,id,";
-            report.segments.forEach((element) => {
-                header += element.id + " ";
-            });
-            header += "\n";
-            header += ",Name,";
-            report.segments.forEach((element) => {
-                header += element.name + " ";
-            });
-            header += "\n";
-        }
-        header += "Data" + "\n";
-        header += "Time,Unix Timestamp,Count,URL" + "\n";
-        return header;
-    },
-    generateBody: (data) => {
-        const report = data.report;
-        const processObject = {};
-        report.data.forEach((element) => {
-            const unixTime = new Date(element.name).getTime() / 1000;
-            processObject[unixTime] = {
-                "time": element.name,
-                "concurrentViewers": element.counts,
-                "URL": element.url
-            };
-        });
-
-        return processObject;
-    },
-    generateReport: (body) => {
-        const timeArray = Object.keys(body);
-        let report = "";
-
-        timeArray.forEach((element) => {
-            report += body[element].time + "," + element + "," + body[element].concurrentViewers + "," + body[element].URL + "\n";
-        });
-
-        return report;
-    }
-};
+const parseData = require("./parseData.js");
 
 const getReport = {
     reportValue: "",
@@ -263,4 +208,3 @@ const getReport = {
 };
 
 module.exports.getReport = getReport;
-module.exports.parseData = parseData;
