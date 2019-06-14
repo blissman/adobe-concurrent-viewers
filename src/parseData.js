@@ -28,8 +28,8 @@ const parseData = {
         header += "Time,Unix Timestamp,Count,URL,showName,showDescription" + "\n";
         return header;
     },
-    generateBody: (data, capiSchedule) => {
-        const report = data.report;
+    generateBody: (adobe, capiSchedule) => {
+        const report = adobe.report;
         const processObject = {};
         report.data.forEach((element) => {
             const unixTime = new Date(element.name).getTime() / 1000;
@@ -38,13 +38,16 @@ const parseData = {
                 "concurrentViewers": element.counts,
                 "URL": element.url
             };
-            if (capiSchedule && capiSchedule[unixTime] && capiSchedule[unixTime]) {
+            if (capiSchedule && capiSchedule[unixTime]) {
                 processObject[unixTime].showName = capiSchedule[unixTime].showName;
                 processObject[unixTime].showDescription = capiSchedule[unixTime].showDescription;
             }
         });
 
         return processObject;
+    },
+    getCapiShow: (schedule, unixTime) => {
+
     },
     generateReport: (body) => {
         const timeArray = Object.keys(body);

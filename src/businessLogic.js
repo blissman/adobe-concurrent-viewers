@@ -120,9 +120,11 @@ const getReport = {
                             const showName = element.Name + " - " + element.Title;
                             const showDescription = element.Desc;
                             const startTime = new Date(element.StartTime).getTime() / 1000;
+                            const endTime = new Date(element.EndTime).getTime() / 1000;
                             returnObject[startTime] = {
                                 showName: showName,
-                                showDescription: showDescription
+                                showDescription: showDescription,
+                                endTime: endTime
                             };
                         });
 
