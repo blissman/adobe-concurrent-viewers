@@ -13,41 +13,18 @@ const getReport = {
         }
         // generate request bodies from the config
         const requestBodies = getReport.requestBody(reportConfig);
-        // request bodies including reportID returned from Adobe's report queue call
-        const reportBodies = [];
-        // capi schedule for each day
-        const capiSchedules = [];
-        // queue each report with Adobe 
-        requestBodies.forEach((requestBody) => {
-            getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", requestBody).then((reportBody) => {
-                reportBodies.push(reportBody);
+        // queue each report with Adobe
+        const queueAdobe = getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", requestBodies[0]);
+        const capiSchedules = getReport.checkCapi(reportConfig, requestBodies[0]);
+
+        Promise.all([queueAdobe, capiSchedules]).then((values) => {
+            const reportBody = values[0];
+            const returnedSchedule = values[1];
+            getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
+                const returnBody = parseData.generateBody(report, returnedSchedule);
+                console.log(parseData.generateReport(returnBody));
             });
         });
-
-        reportBodies.forEach((body) => {
-            console.log(body);
-        });
-        // get the capi schedules for each report
-        reportBodies.forEach((reportBody) => {
-            getReport.checkCapi(reportConfig, reportBody).then((schedule) => {
-                capiSchedules.push(schedule);
-            });
-        });
-
-        reportBodies.forEach((reportBody) => {
-            console.log(reportBody);
-        });
-
-        capiSchedules.forEach((schedule) => {
-            console.log(schedule);
-        });
-        // const adobeResponse = getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", element).then((requestBody) => {
-        //     window.setTimeout(() => {
-        //         getReport.getAdobe(userConfig, reportConfig, requestBody).then((data) => {
-        //             return data;
-        //         });
-        //     }, reportConfig.reportTimeout);
-        // });
     },
     requestBody: (reportConfig) => {
         if (!reportConfig || typeof(reportConfig) !== "object") {
@@ -136,23 +113,20 @@ const getReport = {
                 const URL = "http://capi.9c9media.com/destinations/tsn_web/platforms/desktop/channelaffiliates/" + reportConfig.capi.channel + "-G/schedules?StartTime=" + requestBody.reportDescription.dateFrom + "T00:00:00&EndTime=" + requestBody.reportDescription.dateTo + "T00:00:00";
                 utils.makeRequest(URL).then(
                     (data) => {
-                        const returnArray = [];
+                        const returnObject = {};
                         const scheduleArray = JSON.parse(data.responseText).Items;
 
                         scheduleArray.forEach((element) => {
                             const showName = element.Name + " - " + element.Title;
                             const showDescription = element.Desc;
                             const startTime = new Date(element.StartTime).getTime() / 1000;
-                            const returnArrayElement = {
+                            returnObject[startTime] = {
                                 showName: showName,
-                                showDescription: showDescription,
-                                startTime: startTime
+                                showDescription: showDescription
                             };
-
-                            returnArray.push(returnArrayElement);
                         });
 
-                        resolve(returnArray);
+                        resolve(returnObject);
                     }
                 ).catch(
                     (error) => {
@@ -174,6 +148,8 @@ const getReport = {
                 } else {
                     reject(false);
                 }
+            }).catch((error) => {
+                console.log(error);
             });
         }).catch((error) => {
             console.log(error);
@@ -187,6 +163,8 @@ const getReport = {
                 } else {
                     reject(false);
                 }
+            }).catch((error) => {
+                console.log(error);
             });
         }).catch((error) => {
             console.log(error);

@@ -25,10 +25,10 @@ const parseData = {
             header += "\n";
         }
         header += "Data" + "\n";
-        header += "Time,Unix Timestamp,Count,URL" + "\n";
+        header += "Time,Unix Timestamp,Count,URL,showName,showDescription" + "\n";
         return header;
     },
-    generateBody: (data) => {
+    generateBody: (data, capiSchedule) => {
         const report = data.report;
         const processObject = {};
         report.data.forEach((element) => {
@@ -38,6 +38,10 @@ const parseData = {
                 "concurrentViewers": element.counts,
                 "URL": element.url
             };
+            if (capiSchedule && capiSchedule[unixTime] && capiSchedule[unixTime]) {
+                processObject[unixTime].showName = capiSchedule[unixTime].showName;
+                processObject[unixTime].showDescription = capiSchedule[unixTime].showDescription;
+            }
         });
 
         return processObject;
@@ -47,7 +51,7 @@ const parseData = {
         let report = "";
 
         timeArray.forEach((element) => {
-            report += body[element].time + "," + element + "," + body[element].concurrentViewers + "," + body[element].URL + "\n";
+            report += body[element].time + "|" + element + "|" + body[element].concurrentViewers + "|" + body[element].URL + "|" + (body[element].showName || "") + "|" + (body[element].showDescription || "") + "\n";
         });
 
         return report;
