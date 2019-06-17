@@ -16,8 +16,11 @@ const getReport = {
         // queue each report with Adobe
         const queueAdobe = getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", requestBodies[0]);
         const capiSchedules = getReport.checkCapi(reportConfig, requestBodies[0]);
+        const timeoutPromise = new Promise(function(resolve, reject) {
+            setTimeout(resolve, reportConfig.reportTimeout);
+        });
 
-        Promise.all([queueAdobe, capiSchedules]).then((values) => {
+        Promise.all([queueAdobe, capiSchedules, timeoutPromise]).then((values) => {
             const reportBody = values[0];
             const returnedSchedule = values[1];
             getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
