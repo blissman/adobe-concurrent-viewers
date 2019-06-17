@@ -47,7 +47,20 @@ const parseData = {
         return processObject;
     },
     getCapiShow: (schedule, unixTime) => {
+        const showTime = parseInt(unixTime);
+        let showInfo = false;
+        schedule.forEach((element) => {
+            if (showTime >= element.startTime && showTime < element.endTime) {
 
+                showInfo = {
+                    "showName": element.showName,
+                    "showDescription": element.showDescription
+                };
+
+            };
+        });
+
+        return showInfo;
     },
     generateReport: (body) => {
         const timeArray = Object.keys(body);

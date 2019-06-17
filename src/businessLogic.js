@@ -23,10 +23,11 @@ const getReport = {
         Promise.all([queueAdobe, capiSchedules, timeoutPromise]).then((values) => {
             const reportBody = values[0];
             const returnedSchedule = values[1];
-            getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
-                const returnBody = parseData.generateBody(report, returnedSchedule);
-                console.log(parseData.generateReport(returnBody));
-            });
+            console.log(returnedSchedule);
+            // getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
+            //     const returnBody = parseData.generateBody(report, returnedSchedule);
+            //     console.log(parseData.generateReport(returnBody));
+            // });
         });
     },
     requestBody: (reportConfig) => {
@@ -116,7 +117,7 @@ const getReport = {
                 const URL = "http://capi.9c9media.com/destinations/tsn_web/platforms/desktop/channelaffiliates/" + reportConfig.capi.channel + "-G/schedules?StartTime=" + requestBody.reportDescription.dateFrom + "T00:00:00&EndTime=" + requestBody.reportDescription.dateTo + "T00:00:00";
                 utils.makeRequest(URL).then(
                     (data) => {
-                        const returnObject = {};
+                        const returnArray = [];
                         const scheduleArray = JSON.parse(data.responseText).Items;
 
                         scheduleArray.forEach((element) => {
@@ -124,14 +125,15 @@ const getReport = {
                             const showDescription = element.Desc;
                             const startTime = new Date(element.StartTime).getTime() / 1000;
                             const endTime = new Date(element.EndTime).getTime() / 1000;
-                            returnObject[startTime] = {
+                            returnArray.push({
                                 showName: showName,
                                 showDescription: showDescription,
+                                startTime: startTime,
                                 endTime: endTime
-                            };
+                            });
                         });
 
-                        resolve(returnObject);
+                        resolve(returnArray);
                     }
                 ).catch(
                     (error) => {

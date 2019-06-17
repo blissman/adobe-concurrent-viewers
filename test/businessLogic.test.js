@@ -4,7 +4,6 @@ const parseData = require("../src/parseData.js");
 describe("businesslogic", () => {
 
     beforeEach(() => {
-        spyOn(businessLogic.getReport, "requestBody").and.callThrough();
         spyOn(businessLogic.getReport, "getAdobe").and.callThrough();
         window.MarketingCloud = {};
         window.MarketingCloud.makeRequest = () => {
