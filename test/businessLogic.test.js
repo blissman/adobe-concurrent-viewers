@@ -278,7 +278,7 @@ describe("businesslogic", () => {
         expect(parseData.generateReport(body)).toEqual(report);
     });
 
-    it("should output a report in pipe separated format", () => {
+    it("should output a report in pipe separated format for daily reports", () => {
         const reportConfig = {
             rsid: 'bellmediatsnprod',
             segmentId: ['s300008103_5cd09d1f5965266a6dcb5c79'],
@@ -310,7 +310,62 @@ describe("businesslogic", () => {
                     [Object]
                 ],
                 segments: [
-                    ['s300008103_5cd09d1f5965266a6dcb5c79']
+                    {
+                        name: "TSN5", 
+                        id: 's300008103_5cd09d1f5965266a6dcb5c79'
+                    }
+                ],
+                data: [],
+                totals: ['9271'],
+                version: '1.4.18.10'
+            },
+            waitSeconds: 0,
+            runSeconds: 0
+        };
+        const header = "Type|ranked\nElements|Video Concurrent Viewers\nReport Suite|id|bellmediatsnprod\n|name|TSN - Prod\nPeriod|Thu. 13 Jun. 2019 - Fri. 14 Jun. 2019\nSegments|id|s300008103_5cd09d1f5965266a6dcb5c79 \n|Name|TSN 5 Live Stream \nData\nTime|Unix Timestamp|Count|URL|showName|showDescription\n";
+        const body = "00:00 2019-06-13|1560398400|4||SC With Jay and Dan - SC With Jay and Dan|The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.";
+        const pipeSeparatedOutput = header + body;
+
+        expect(getReport.writeReport(reportConfig, report, header, body)).toEqual(pipeSeparatedOutput);
+    });
+
+
+    it("should output a report in pipe separated format for monthly reports", () => {
+        const reportConfig = {
+            rsid: 'bellmediatsnprod',
+            segmentId: ['s300008103_5cd09d1f5965266a6dcb5c79'],
+            type: 'monthly',
+            month: 4,
+            year: 2019,
+            startDate: '2019-06-13',
+            endDate: '2019-06-14',
+            endpoint: 'api.omniture.com',
+            reportTimeout: 20000,
+            maxDataPoints: 2880,
+            capi: {
+                isEnabled: true,
+                channel: 'TSN5'
+            }
+        };
+        const report = {
+            report: {
+                type: 'ranked',
+                elements: [
+                    [Object]
+                ],
+                reportSuite: {
+                    id: 'bellmediatsnprod',
+                    name: 'TSN - Prod'
+                },
+                period: 'Thu. 13 Jun. 2019 - Fri. 14 Jun. 2019',
+                metrics: [
+                    [Object]
+                ],
+                segments: [
+                    {
+                        name: "TSN5", 
+                        id: 's300008103_5cd09d1f5965266a6dcb5c79'
+                    }
                 ],
                 data: [],
                 totals: ['9271'],
