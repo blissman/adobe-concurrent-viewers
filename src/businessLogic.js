@@ -23,11 +23,10 @@ const getReport = {
         Promise.all([queueAdobe, capiSchedules, timeoutPromise]).then((values) => {
             const reportBody = values[0];
             const returnedSchedule = values[1];
-            console.log(returnedSchedule);
-            // getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
-            //     const returnBody = parseData.generateBody(report, returnedSchedule);
-            //     console.log(parseData.generateReport(returnBody));
-            // });
+            getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
+                const returnBody = parseData.generateBody(reportBody, report, returnedSchedule);
+                console.log(parseData.generateReport(returnBody));
+            });
         });
     },
     requestBody: (reportConfig) => {

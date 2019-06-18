@@ -28,19 +28,26 @@ const parseData = {
         header += "Time|Unix Timestamp|Count|URL|showName|showDescription" + "\n";
         return header;
     },
-    generateBody: (adobe, capiSchedule) => {
+    generateBody: (request, adobe, capiSchedule) => {
         const report = adobe.report;
         const processObject = {};
+        const startTime = new Date(request.reportDescription.dateFrom + "T00:00:00").getTime() / 1000;
+        console.log(startTime);
+        const endTime = new Date(request.reportDescription.dateTo + "T00:00:00").getTime() / 1000;
+        console.log(endTime);
         report.data.forEach((element) => {
             const unixTime = new Date(element.name).getTime() / 1000;
-            processObject[unixTime] = {
-                "time": element.name,
-                "concurrentViewers": element.counts,
-                "URL": element.url
-            };
-            if (capiSchedule && capiSchedule[unixTime]) {
-                processObject[unixTime].showName = capiSchedule[unixTime].showName;
-                processObject[unixTime].showDescription = capiSchedule[unixTime].showDescription;
+            if (unixTime >= startTime && unixTime < endTime) {
+                const capiShow = parseData.getCapiShow(capiSchedule, unixTime);
+                processObject[unixTime] = {
+                    "time": element.name,
+                    "concurrentViewers": element.counts,
+                    "URL": element.url
+                };
+                if (capiShow && capiShow.showName && capiShow.showDescription) {
+                    processObject[unixTime].showName = capiShow.showName;
+                    processObject[unixTime].showDescription = capiShow.showDescription;
+                }
             }
         });
 
