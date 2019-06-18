@@ -27,11 +27,7 @@ const getReport = {
                 const returnHeader = parseData.generateHeader(reportBody, report);
                 const bodyObject = parseData.generateBody(reportBody, report, returnedSchedule);
                 const returnBody = parseData.generateReport(bodyObject);
-                console.log(reportConfig);
-                console.log(report);
-                console.log(returnHeader);
-                console.log(returnBody);
-                // getReport.writeReport(reportConfig, report, returnHeader, returnBody);
+                getReport.writeReport(reportConfig, report, returnHeader, returnBody);
             });
         });
     },
