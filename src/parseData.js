@@ -32,9 +32,7 @@ const parseData = {
         const report = adobe.report;
         const processObject = {};
         const startTime = new Date(request.reportDescription.dateFrom + "T00:00:00").getTime() / 1000;
-        console.log(startTime);
         const endTime = new Date(request.reportDescription.dateTo + "T00:00:00").getTime() / 1000;
-        console.log(endTime);
         report.data.forEach((element) => {
             const unixTime = new Date(element.name).getTime() / 1000;
             if (unixTime >= startTime && unixTime < endTime) {
