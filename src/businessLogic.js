@@ -24,8 +24,10 @@ const getReport = {
             const reportBody = values[0];
             const returnedSchedule = values[1];
             getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
-                const returnBody = parseData.generateBody(reportBody, report, returnedSchedule);
-                console.log(parseData.generateReport(returnBody));
+                const returnHeader = parseData.generateHeader(reportBody, report);
+                const bodyObject = parseData.generateBody(reportBody, report, returnedSchedule);
+                const returnBody = parseData.generateReport(bodyObject);
+                getReport.writeReport(reportConfig, report, returnHeader, returnBody);
             });
         });
     },
@@ -176,14 +178,13 @@ const getReport = {
             console.log(error);
         });
     },
-    writeReport: (reportConfig, data) => {
+    writeReport: (reportConfig, data, header, body) => {
         if (!reportConfig && reportConfig.type !== "monthly" && reportConfig.type !== "daily") {
             console.log("Error: writeReport - invalid reportConfig type!");
             return false;
         }
-
         const type = reportConfig.type;
-        const reportData = JSON.parse(data.responseText).report;
+        const reportData = data.report;
         let segmentName;
         if (reportData.segments && reportData.segments[0] && reportData.segments.length === 1) {
             segmentName = reportData.segments[0].name + "(" + reportData.segments[0].id + ")";
@@ -198,7 +199,9 @@ const getReport = {
             reportName = segmentName + " - " + utils.getMonthName(reportConfig.month) + ", " + reportConfig.year;
         }
 
-        fs.writeFile("./reports/" + reportName + ".csv", getReport.reportValue, (err, data) => {
+        const reportText = header + body;
+
+        fs.writeFile("./reports/" + reportName + ".csv", reportText, (err, data) => {
             if (err) {
                 console.log(err);
             }

@@ -1,5 +1,5 @@
 const parseData = {
-    generateHeader: (data, reportConfig) => {
+    generateHeader: (reportConfig, data) => {
         const report = data.report;
         let header = "";
         header += "Type|" + report.type + "\n";
