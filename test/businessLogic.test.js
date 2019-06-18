@@ -1,10 +1,12 @@
 const getReport = require("../src/businessLogic.js");
 const parseData = require("../src/parseData.js");
+const fs = require("file-system");
 
 describe("businesslogic", () => {
 
     beforeEach(() => {
         spyOn(getReport, "requestBody").and.callThrough();
+        spyOn(fs, "writeFile");
         window.MarketingCloud = {};
         window.MarketingCloud.makeRequest = () => {
             return new Promise((resolve, reject) => {
@@ -115,35 +117,35 @@ describe("businesslogic", () => {
     };
 
     const user = {
-            name: "gerald.butts@canada.ca:Federal Government",
-            sharedSecret: "0be47a0a1aab316891eeae4e6555551b"
-        };
+        name: "gerald.butts@canada.ca:Federal Government",
+        sharedSecret: "0be47a0a1aab316891eeae4e6555551b"
+    };
 
     const report = {
-            rsid: "testrsid",
-            segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
-            type: "daily",
-            month: 5,
-            year: 2019,
-            startDate: "2019-05-02",
-            endDate: "2019-05-03",
-            endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
-            reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
-            maxDataPoints: 2880 // this sets the limit on how many data points to pull (default is 2880)
-        };
+        rsid: "testrsid",
+        segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
+        type: "daily",
+        month: 5,
+        year: 2019,
+        startDate: "2019-05-02",
+        endDate: "2019-05-03",
+        endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
+        reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
+        maxDataPoints: 2880 // this sets the limit on how many data points to pull (default is 2880)
+    };
 
     const monthlyReport = {
-            rsid: "testrsid",
-            segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
-            type: "monthly",
-            month: 5,
-            year: 2019,
-            startDate: "2019-05-02",
-            endDate: "2019-05-03",
-            endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
-            reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
-            maxDataPoints: 5000 // this sets the limit on how many data points to pull (default is 2880)
-        };
+        rsid: "testrsid",
+        segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
+        type: "monthly",
+        month: 5,
+        year: 2019,
+        startDate: "2019-05-02",
+        endDate: "2019-05-03",
+        endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
+        reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
+        maxDataPoints: 5000 // this sets the limit on how many data points to pull (default is 2880)
+    };
 
 
     const requestBody = [{
@@ -275,4 +277,53 @@ describe("businesslogic", () => {
         expect(parseData.generateBody(requestBody[0], duplicateData)).toEqual(body);
         expect(parseData.generateReport(body)).toEqual(report);
     });
+
+    it("should output a report in pipe separated format", () => {
+        const reportConfig = {
+            rsid: 'bellmediatsnprod',
+            segmentId: ['s300008103_5cd09d1f5965266a6dcb5c79'],
+            type: 'daily',
+            month: 4,
+            year: 2019,
+            startDate: '2019-06-13',
+            endDate: '2019-06-14',
+            endpoint: 'api.omniture.com',
+            reportTimeout: 20000,
+            maxDataPoints: 2880,
+            capi: {
+                isEnabled: true,
+                channel: 'TSN5'
+            }
+        };
+        const report = {
+            report: {
+                type: 'ranked',
+                elements: [
+                    [Object]
+                ],
+                reportSuite: {
+                    id: 'bellmediatsnprod',
+                    name: 'TSN - Prod'
+                },
+                period: 'Thu. 13 Jun. 2019 - Fri. 14 Jun. 2019',
+                metrics: [
+                    [Object]
+                ],
+                segments: [
+                    ['s300008103_5cd09d1f5965266a6dcb5c79']
+                ],
+                data: [],
+                totals: ['9271'],
+                version: '1.4.18.10'
+            },
+            waitSeconds: 0,
+            runSeconds: 0
+        };
+        const header = "Type|ranked\nElements|Video Concurrent Viewers\nReport Suite|id|bellmediatsnprod\n|name|TSN - Prod\nPeriod|Thu. 13 Jun. 2019 - Fri. 14 Jun. 2019\nSegments|id|s300008103_5cd09d1f5965266a6dcb5c79 \n|Name|TSN 5 Live Stream \nData\nTime|Unix Timestamp|Count|URL|showName|showDescription\n";
+        const body = "00:00 2019-06-13|1560398400|4||SC With Jay and Dan - SC With Jay and Dan|The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.";
+        const pipeSeparatedOutput = header + body;
+
+        expect(getReport.writeReport(reportConfig, report, header, body)).toEqual(pipeSeparatedOutput);
+    });
+
 });

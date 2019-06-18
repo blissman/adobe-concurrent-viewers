@@ -35,10 +35,11 @@ const parseData = {
         const endTime = new Date(request.reportDescription.dateTo + "T00:00:00").getTime() / 1000;
         report.data.forEach((element) => {
             const unixTime = new Date(element.name).getTime() / 1000;
+            let capiShow;
+            if (capiSchedule) {
+                capiShow = parseData.getCapiShow(capiSchedule, unixTime);
+            }
             if (unixTime >= startTime && unixTime < endTime) {
-                if (capiSchedule) {
-                    const capiShow = parseData.getCapiShow(capiSchedule, unixTime);
-                }
                 processObject[unixTime] = {
                     "time": element.name,
                     "concurrentViewers": element.counts,
