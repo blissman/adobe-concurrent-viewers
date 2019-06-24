@@ -56,6 +56,10 @@ In some cases (if running large datasets, or complicated segments) the reports c
 
 By default, this report is set to return the top 2880 values. If you're requesting a big data set, this means that times and values can be dropped. By increasing this value in ```src/config/report.js``` you can mitigate this by requesting more data points.
 
+### Limitations
+
+This CAPI branch currently allows one to pull daily data with CAPI schedules included in the processing and parsing. For the moment, monthly data collection will not function owing to changes to the architecture. This will be included in a future improvement.
+
 ## Credits
 
 Credits go to Adobe for their [Marketing Cloud Javascript SDK](https://github.com/Adobe-Marketing-Cloud/marketing-cloud-javascript-sdk).
