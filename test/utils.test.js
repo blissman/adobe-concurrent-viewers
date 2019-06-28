@@ -87,10 +87,22 @@ describe("utils", () => {
         expect(utils.formatMonth(13)).toBeFalsy();
         expect(utils.formatMonth(0)).toBeFalsy();
         expect(utils.formatMonth(-1)).toBeFalsy();
-        expect(utils.getMonthName(null)).toBeFalsy();
-        expect(utils.getMonthName()).toBeFalsy();
-        expect(utils.getMonthName(()=>{})).toBeFalsy();
-        expect(utils.getMonthName(true)).toBeFalsy();
+        expect(utils.formatMonth(null)).toBeFalsy();
+        expect(utils.formatMonth()).toBeFalsy();
+        expect(utils.formatMonth(()=>{})).toBeFalsy();
+        expect(utils.formatMonth(true)).toBeFalsy();
     });
 
+    it("should return numerical dates as a two-digit string", () => {
+        expect(utils.formatDate(1)).toEqual("01");
+        expect(utils.formatDate(13)).toEqual("13");
+        expect(utils.formatDate(31)).toEqual("31");
+        expect(utils.formatDate(32)).toBeFalsy();
+        expect(utils.formatDate(0)).toBeFalsy();
+        expect(utils.formatDate(-1)).toBeFalsy();
+        expect(utils.formatDate(null)).toBeFalsy();
+        expect(utils.formatDate()).toBeFalsy();
+        expect(utils.formatDate(()=>{})).toBeFalsy();
+        expect(utils.formatDate(true)).toBeFalsy();
+    });
 });

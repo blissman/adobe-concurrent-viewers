@@ -65,16 +65,11 @@ const getReport = {
             };
             bodyArray.push(body);
         } else if (type === "monthly") {
-            const reportYear = reportConfig.year;
-            const reportMonth = reportConfig.month;
+            const year = reportConfig.year.toString();
+            const month = utils.formatMonth(reportConfig.month);
             const totalDays = utils.getDays(reportMonth, reportYear);
-            const yearValue = reportYear.toString();
-            let monthValue;
-            if (reportMonth.toString().length === 1) {
-                monthValue = "0" + reportMonth.toString();
-            } else {
-                monthValue = reportMonth.toString();
-            }
+            const nextMonthValue = utils.formatMonth(reportMonth + 1);
+
             for (let i = 1; i < totalDays; i++) {
                 let startDate;
                 let endDate;
@@ -94,8 +89,8 @@ const getReport = {
                 const body = {
                     "reportDescription": {
                         "reportSuiteID": rsid,
-                        "dateFrom": yearValue + "-" + monthValue + "-" + startDate,
-                        "dateTo": yearValue + "-" + monthValue + "-" + endDate,
+                        "dateFrom": year + "-" + month + "-" + startDate,
+                        "dateTo": year + "-" + month + "-" + endDate,
                         "metrics": [{
                             "id": "instances"
                         }],
