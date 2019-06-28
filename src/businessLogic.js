@@ -2,6 +2,7 @@ const utils = require("./utils.js");
 const MarketingCloud = require("./adobeDependencies/marketing_cloud.js");
 const fs = require("file-system");
 const parseData = require("./parseData.js");
+const forEachAsync = require("foreachasync");
 
 const getReport = {
     reportValue: "",
