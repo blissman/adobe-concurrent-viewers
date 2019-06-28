@@ -54,6 +54,17 @@ utils = {
             request.open(method || "GET", url, true);
             request.send();
         });
+    },
+    formatMonth: (month) => {
+        if (typeof(month) !== "number" || month < 1 || month > 12) {
+            return false;
+        }
+
+        if (month.toString().length === 1) {
+            return "0" + month.toString();
+        } else {
+            return month.toString();
+        }
     }
 };
 
