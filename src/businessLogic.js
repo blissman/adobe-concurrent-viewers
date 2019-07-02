@@ -2,7 +2,7 @@ const utils = require("./utils.js");
 const MarketingCloud = require("./adobeDependencies/marketing_cloud.js");
 const fs = require("file-system");
 const parseData = require("./parseData.js");
-const forEachAsync = require("foreachasync");
+const forEachAsync = require("foreachasync").forEachAsync;
 
 const getReport = {
     reportValue: "",
@@ -14,14 +14,28 @@ const getReport = {
         }
         // generate request bodies from the config
         const requestBodies = getReport.requestBody(reportConfig);
+        const reportBodies = [];
         // queue each report with Adobe
-        const queueAdobe = getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", requestBodies[0]);
+        const queueAdobe = forEachAsync(requestBodies, (element) => {
+            const reportBody = getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", element);
+            reportBodies.push(reportBody);
+            console.log(reportBody);
+        }).then(() => {
+            return new Promise((resolve, reject) => {
+                console.log('all done!');
+                resolve();
+            });
+        });
         const capiSchedules = getReport.checkCapi(reportConfig, requestBodies[0]);
-        const timeoutPromise = new Promise(function(resolve, reject) {
+        const timeoutPromise = new Promise((resolve, reject) => {
             setTimeout(resolve, reportConfig.reportTimeout);
         });
 
         Promise.all([queueAdobe, capiSchedules, timeoutPromise]).then((values) => {
+            console.log("promise me this");
+            reportBodies.forEach((reportBody) => {
+                console.log(reportBody);
+            });
             const reportBody = values[0];
             const returnedSchedule = values[1];
             getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
