@@ -1,4 +1,4 @@
-utils = {
+const utils = {
     getDays: (month, year) => {
         if (!month || !year || typeof(month) !== "number" || typeof(year) !== "number" || month < 1 || month > 12) {
             console.log("Error: month or year is invalid!");
@@ -64,6 +64,17 @@ utils = {
             return "0" + month.toString();
         } else {
             return month.toString();
+        }
+    },
+    formatDate: (date) => {
+        if (typeof(date) !== "number" || date < 1 || date > 31) {
+            return false;
+        }
+
+        if (date.toString().length === 1) {
+            return "0" + date.toString();
+        } else {
+            return date.toString();
         }
     }
 };

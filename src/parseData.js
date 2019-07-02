@@ -1,3 +1,5 @@
+const utils = require("./utils.js");
+
 const parseData = {
     generateHeader: (reportConfig, data) => {
         const report = data.report;

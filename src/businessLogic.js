@@ -67,30 +67,24 @@ const getReport = {
         } else if (type === "monthly") {
             const year = reportConfig.year.toString();
             const month = utils.formatMonth(reportConfig.month);
-            const totalDays = utils.getDays(reportMonth, reportYear);
-            const nextMonthValue = utils.formatMonth(reportMonth + 1);
+            const totalDays = utils.getDays(reportConfig.month, reportConfig.year);
+            const nextMonthValue = utils.formatMonth(reportConfig.month + 1);
 
-            for (let i = 1; i < totalDays; i++) {
-                let startDate;
+            for (let i = 1; i <= totalDays; i++) {
+                const startDate = utils.formatDate(i);
                 let endDate;
 
-                if (i.toString().length === 1) {
-                    startDate = "0" + i.toString();
-                } else {
-                    startDate = i.toString();
-                }
-
-                if ((i + 1).toString().length === 1) {
-                    endDate = "0" + (i + 1).toString();
-                } else {
-                    endDate = (i + 1).toString();
+                if (i < totalDays) {
+                    endDate = year + "-" + month + "-" + utils.formatDate(i + 1);
+                } else if (i === totalDays) {
+                    endDate = year + "-" + nextMonthValue + "-" + utils.formatDate(1);
                 }
 
                 const body = {
                     "reportDescription": {
                         "reportSuiteID": rsid,
                         "dateFrom": year + "-" + month + "-" + startDate,
-                        "dateTo": year + "-" + month + "-" + endDate,
+                        "dateTo": endDate,
                         "metrics": [{
                             "id": "instances"
                         }],
@@ -103,9 +97,11 @@ const getReport = {
                         "locale": "en_US"
                     }
                 };
+
                 bodyArray.push(body);
             }
         }
+
         return bodyArray;
     },
     checkCapi: (reportConfig, requestBody) => {

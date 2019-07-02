@@ -182,7 +182,8 @@ describe("businesslogic", () => {
 
     it("should return a monthly body object if getReport.requestBody() is called with a report config object set", () => {
         expect(getReport.requestBody(monthlyReport)).toBeTruthy();
-        expect(getReport.requestBody(monthlyReport).length).toEqual(30);
+        console.log(getReport.requestBody(monthlyReport));
+        expect(getReport.requestBody(monthlyReport).length).toEqual(31);
     });
 
     it("should return false if init is called with invalid user and/or report configurations", () => {
