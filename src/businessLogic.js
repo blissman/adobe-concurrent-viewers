@@ -17,12 +17,12 @@ const getReport = {
         const reportBodies = [];
         // queue each report with Adobe
         const queueAdobe = forEachAsync(requestBodies, (element) => {
-            const reportBody = getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", element);
-            reportBodies.push(reportBody);
-            console.log(reportBody);
+            getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", element).then((reportBody) => {
+                reportBodies.push(reportBody);
+            });
+            
         }).then(() => {
             return new Promise((resolve, reject) => {
-                console.log('all done!');
                 resolve();
             });
         });
@@ -32,18 +32,20 @@ const getReport = {
         });
 
         Promise.all([queueAdobe, capiSchedules, timeoutPromise]).then((values) => {
-            console.log("promise me this");
             reportBodies.forEach((reportBody) => {
                 console.log(reportBody);
+                getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
+                    console.log(report);
+                })
             });
-            const reportBody = values[0];
-            const returnedSchedule = values[1];
-            getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
-                const returnHeader = parseData.generateHeader(reportBody, report);
-                const bodyObject = parseData.generateBody(reportBody, report, returnedSchedule);
-                const returnBody = parseData.generateReport(bodyObject);
-                getReport.writeReport(reportConfig, report, returnHeader, returnBody);
-            });
+            // const reportBody = values[0];
+            // const returnedSchedule = values[1];
+            // getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
+            //     const returnHeader = parseData.generateHeader(reportBody, report);
+            //     const bodyObject = parseData.generateBody(reportBody, report, returnedSchedule);
+            //     const returnBody = parseData.generateReport(bodyObject);
+            //     getReport.writeReport(reportConfig, report, returnHeader, returnBody);
+            // });
         });
     },
     requestBody: (reportConfig) => {
