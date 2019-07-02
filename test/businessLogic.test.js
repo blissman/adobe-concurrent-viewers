@@ -181,9 +181,15 @@ describe("businesslogic", () => {
     });
 
     it("should return a monthly body object if getReport.requestBody() is called with a report config object set", () => {
-        expect(getReport.requestBody(monthlyReport)).toBeTruthy();
-        console.log(getReport.requestBody(monthlyReport));
-        expect(getReport.requestBody(monthlyReport).length).toEqual(31);
+        const monthlyReportBody = getReport.requestBody(monthlyReport);
+        expect(monthlyReportBody).toBeTruthy();
+        expect(monthlyReportBody.length).toEqual(31);
+        expect(monthlyReportBody[0].reportDescription.dateFrom).toEqual("2019-05-01");
+        expect(monthlyReportBody[0].reportDescription.dateTo).toEqual("2019-05-02");
+        expect(monthlyReportBody[4].reportDescription.dateFrom).toEqual("2019-05-05");
+        expect(monthlyReportBody[4].reportDescription.dateTo).toEqual("2019-05-06");
+        expect(monthlyReportBody[30].reportDescription.dateFrom).toEqual("2019-05-31");
+        expect(monthlyReportBody[30].reportDescription.dateTo).toEqual("2019-06-01");
     });
 
     it("should return false if init is called with invalid user and/or report configurations", () => {
