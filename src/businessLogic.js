@@ -14,32 +14,52 @@ const getReport = {
         }
         // generate request bodies from the config
         const requestBodies = getReport.requestBody(reportConfig);
+        // establish arrays for storing your reportBodies, capiSchedules, and reports
         const reportBodies = [];
+        const capiSchedules = [];
+        const reportsArray = [];
         // queue each report with Adobe
         const queueAdobe = forEachAsync(requestBodies, (element) => {
             getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", element).then((reportBody) => {
+                // return report bodies with report ids
                 reportBodies.push(reportBody);
             });
-            
         }).then(() => {
             return new Promise((resolve, reject) => {
-                resolve();
+                resolve(reportBodies);
             });
         });
-        const capiSchedules = getReport.checkCapi(reportConfig, requestBodies[0]);
+        // get your capi schedules
+        const getCapi = forEachAsync(requestBodies, (element) => {
+            getReport.checkCapi(reportConfig, element).then((capiSchedule) => {
+                capiSchedules.push(capiSchedule);
+            })
+        }).then(() => {
+            return new Promise((resolve, reject) => {
+                resolve(capiSchedules);
+            });
+        });
+        // set a timeout while Adobe processes your reports
         const timeoutPromise = new Promise((resolve, reject) => {
             setTimeout(resolve, reportConfig.reportTimeout);
         });
 
-        Promise.all([queueAdobe, capiSchedules, timeoutPromise]).then((values) => {
-            reportBodies.forEach((reportBody) => {
-                console.log(reportBody);
+        Promise.all([queueAdobe, getCapi, timeoutPromise]).then((values) => {
+            const reportBodiesArray = values[0];
+            const schedulesArray = values[1];
+
+            forEachAsync(reportBodiesArray, (reportBody) => {
                 getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
-                    console.log(report);
-                })
-            });
-            // const reportBody = values[0];
-            // const returnedSchedule = values[1];
+                    reportsArray.push(report);
+                }).then(() => {
+                    const returnHeader = parseData.generateHeader(reportConfig, reportsArray[0]);
+                    console.log(returnHeader);
+                    reportsArray.forEach((report) => {
+                        console.log(report);
+                    });
+                });;
+            })
+
             // getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
             //     const returnHeader = parseData.generateHeader(reportBody, report);
             //     const bodyObject = parseData.generateBody(reportBody, report, returnedSchedule);
