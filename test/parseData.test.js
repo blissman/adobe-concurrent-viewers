@@ -403,4 +403,8 @@ describe("parseData methods", () => {
         expect(parseData.getCapiShow(testSchedule, "1154177605")).toEqual(false);
         expect(parseData.getCapiShow(testSchedule, "1554091199")).toEqual(false);
     });
+
+    it("should return a single array with the child elements combined", () => {
+        expect(parseData.getCombinedSchedule(capiScheduleArray)).toEqual(testSchedule);
+    });
 });

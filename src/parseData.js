@@ -81,6 +81,15 @@ const parseData = {
         });
 
         return report;
+    },
+    getCombinedSchedule: (scheduleArray) => {
+        const combinedSchedule = [];
+        scheduleArray.forEach((schedule) => {
+            schedule.forEach((show) => {
+                combinedSchedule.push(show);
+            });
+        })
+        return combinedSchedule;
     }
 };
 
