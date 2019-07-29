@@ -141,7 +141,7 @@ describe("parseData methods", () => {
         }
     ];
 
-    const adobeDataArray = [
+    const adobeReportArray = [
             {
             "report": {
                 "type": "ranked",
@@ -237,6 +237,40 @@ describe("parseData methods", () => {
             "runSeconds": 0
         }
     ];
+
+    const combinedReport = [{
+        "name": "00:24 2019-05-02",
+        "url": "",
+        "counts": ["237"]
+    }, {
+        "name": "00:26 2019-05-02",
+        "url": "",
+        "counts": ["235"]
+    }, {
+        "name": "00:25 2019-05-02",
+        "url": "",
+        "counts": ["236"]
+    }, {
+        "name": "00:23 2019-05-02",
+        "url": "",
+        "counts": ["236"]
+    }, {
+        "name": "00:24 2019-05-03",
+        "url": "",
+        "counts": ["237"]
+    }, {
+        "name": "00:26 2019-05-03",
+        "url": "",
+        "counts": ["235"]
+    }, {
+        "name": "00:25 2019-05-03",
+        "url": "",
+        "counts": ["236"]
+    }, {
+        "name": "00:23 2019-05-03",
+        "url": "",
+        "counts": ["236"]
+    }];
 
     const capiScheduleArray = [
         [
@@ -404,7 +438,11 @@ describe("parseData methods", () => {
         expect(parseData.getCapiShow(testSchedule, "1554091199")).toEqual(false);
     });
 
-    it("should return a single array with the child elements combined", () => {
+    it("should return a single capi schedule array with the child elements combined", () => {
         expect(parseData.getCombinedSchedule(capiScheduleArray)).toEqual(testSchedule);
+    });
+
+    it("should return combined data from each Adobe report", () => {
+        expect(parseData.getCombinedReport(adobeReportArray)).toEqual(combinedReport);
     });
 });
