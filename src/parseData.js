@@ -88,8 +88,18 @@ const parseData = {
             schedule.forEach((show) => {
                 combinedSchedule.push(show);
             });
-        })
+        });
+
         return combinedSchedule;
+    }, getCombinedReport: (reportsArray) => {
+        const combinedReport = [];
+        reportsArray.forEach((report) => {
+            report.report.data.forEach((entry) => {
+                combinedReport.push(entry);
+            });
+        });
+
+        return combinedReport;
     }
 };
 
