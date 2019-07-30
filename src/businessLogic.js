@@ -64,11 +64,6 @@ const getReport = {
                     getReport.writeReport(reportConfig, report, returnHeader, returnBody);
                 });
             });
-
-            // getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
-            //     const returnHeader = parseData.generateHeader(reportBody, report);
-            //     const bodyObject = parseData.generateBody(reportBody, report, returnedSchedule);
-            // });
         }).catch((error) => {
             console.log(error);
         });
