@@ -116,6 +116,50 @@ describe("businesslogic", () => {
         "runSeconds": 0
     };
 
+    const combinedData = [
+        {
+                "name": "00:24 2019-05-02",
+                "url": "",
+                "counts": ["237"]
+            }, {
+                "name": "00:26 2019-05-02",
+                "url": "",
+                "counts": ["235"]
+            }, {
+                "name": "00:25 2019-05-02",
+                "url": "",
+                "counts": ["236"]
+            }, {
+                "name": "00:23 2019-05-02",
+                "url": "",
+                "counts": ["236"]
+            }
+    ];
+
+    const duplicateCombinedData = [
+        {
+                "name": "00:24 2019-05-02",
+                "url": "",
+                "counts": ["237"]
+            }, {
+                "name": "00:26 2019-05-02",
+                "url": "",
+                "counts": ["235"]
+            }, {
+                "name": "00:25 2019-05-02",
+                "url": "",
+                "counts": ["236"]
+            }, {
+                "name": "00:25 2019-05-02",
+                "url": "",
+                "counts": ["15"]
+            }, {
+                "name": "00:23 2019-05-02",
+                "url": "",
+                "counts": ["236"]
+            }
+    ];
+
     const user = {
         name: "gerald.butts@canada.ca:Federal Government",
         sharedSecret: "0be47a0a1aab316891eeae4e6555551b"
@@ -251,8 +295,8 @@ describe("businesslogic", () => {
             }
         };
         const report = "00:23 2019-05-02|1556770980|236|||\n00:24 2019-05-02|1556771040|237|||\n00:25 2019-05-02|1556771100|236|||\n00:26 2019-05-02|1556771160|235|||\n";
-
-        expect(parseData.generateBody(requestBody[0], data)).toEqual(body);
+        expect(parseData.getCombinedReport([data])).toEqual(combinedData);
+        expect(parseData.generateBody(requestBody[0], combinedData)).toEqual(body);
         expect(parseData.generateReport(body)).toEqual(report);
     });
 
@@ -281,7 +325,8 @@ describe("businesslogic", () => {
         };
 
         const report = "00:23 2019-05-02|1556770980|236|||\n00:24 2019-05-02|1556771040|237|||\n00:25 2019-05-02|1556771100|15|||\n00:26 2019-05-02|1556771160|235|||\n";
-        expect(parseData.generateBody(requestBody[0], duplicateData)).toEqual(body);
+        expect(parseData.getCombinedReport([duplicateData])).toEqual(duplicateCombinedData);
+        expect(parseData.generateBody(requestBody[0], duplicateCombinedData)).toEqual(body);
         expect(parseData.generateReport(body)).toEqual(report);
     });
 
