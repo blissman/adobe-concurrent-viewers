@@ -52,14 +52,12 @@ const getReport = {
                 getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
                     adobeReports.push(report);
                 }).then(() => {
-                    const bodyObject = {};
                     // generate the header for the report
                     const returnHeader = parseData.generateHeader(reportConfig, adobeReports[0]);
                     // run through each report and parse it into a body object
                     const combinedReport = parseData.getCombinedReport(adobeReports);
-                    console.log(combinedReport);
                     // generate the text body from the body object
-                    const returnBody = parseData.generateReport(bodyObject);
+                    const returnBody = parseData.generateReport(combinedReport);
                     // write the report to a .csv file
                     getReport.writeReport(reportConfig, report, returnHeader, returnBody);
                 });

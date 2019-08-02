@@ -31,11 +31,10 @@ const parseData = {
         return header;
     },
     generateBody: (request, adobeReport, capiSchedule) => {
-        const report = adobeReport.report;
         const processObject = {};
         const startTime = new Date(request.reportDescription.dateFrom + "T00:00:00").getTime() / 1000;
         const endTime = new Date(request.reportDescription.dateTo + "T00:00:00").getTime() / 1000;
-        report.data.forEach((element) => {
+        adobeReport.forEach((element) => {
             const unixTime = new Date(element.name).getTime() / 1000;
             let capiShow;
             if (capiSchedule) {
