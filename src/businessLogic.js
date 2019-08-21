@@ -52,14 +52,21 @@ const getReport = {
                 getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
                     adobeReports.push(report);
                 }).then(() => {
+                    const finalBodies = [];
                     // generate the header for the report
                     const returnHeader = parseData.generateHeader(reportConfig, adobeReports[0]);
                     // run through each report and parse it into a body object
                     const combinedReport = parseData.getCombinedReport(adobeReports);
+                    const combinedSchedule = parseData.getCombinedSchedule(capiSchedules);
                     // generate the text body from the body object
-                    const returnBody = parseData.generateReport(combinedReport);
+                    requestBodies.forEach((request) => {
+                        finalBodies.push(parseData.generateBody(request, combinedReport, combinedSchedule));
+                    });
                     // write the report to a .csv file
-                    getReport.writeReport(reportConfig, report, returnHeader, returnBody);
+                    finalBodies.forEach((reportBody) => {
+                        console.log(reportBody);
+                    });
+                    // getReport.writeReport(reportConfig, report, returnHeader, returnBody);
                 });
             });
         }).catch((error) => {

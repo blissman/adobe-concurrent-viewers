@@ -141,6 +141,26 @@ describe("parseData methods", () => {
         }
     ];
 
+    const requestBody = [{
+        "reportDescription": {
+            "reportSuiteID": "testrsid",
+            "dateFrom": "2019-05-02",
+            "dateTo": "2019-05-03",
+            "metrics": [{
+                "id": "instances"
+            }],
+            "elements": [{
+                "id": "videoconcurrentviewers",
+                "top": "2880"
+            }],
+            "segments": [{
+                "id": "s311108103_5cccaa0d85d04262783da2e6"
+            }],
+            "sortBy": "instances",
+            "locale": "en_US"
+        }
+    }];
+
     const adobeReportArray = [
             {
             "report": {
@@ -444,5 +464,9 @@ describe("parseData methods", () => {
 
     it("should return combined data from each Adobe report", () => {
         expect(parseData.getCombinedReport(adobeReportArray)).toEqual(combinedReport);
+    });
+
+    it("should return a combined report including Adobe and Capi data", () => {
+        expect(parseData.generateBody(requestBody, combinedReport, testSchedule)).toEqual(true);
     });
 });
