@@ -33,7 +33,7 @@ const getReport = {
         const getCapi = forEachAsync(requestBodies, (element) => {
             getReport.checkCapi(reportConfig, element).then((capiSchedule) => {
                 capiSchedules.push(capiSchedule);
-            })
+            });
         }).then(() => {
             return new Promise((resolve, reject) => {
                 resolve(capiSchedules);
@@ -47,27 +47,31 @@ const getReport = {
         Promise.all([queueAdobe, getCapi, timeoutPromise]).then((values) => {
             const reportBodiesArray = values[0];
             const schedulesArray = values[1];
+            const finalBodies = [];
 
             forEachAsync(reportBodiesArray, (reportBody) => {
                 getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
                     adobeReports.push(report);
                 }).then(() => {
-                    const finalBodies = [];
-                    // generate the header for the report
-                    const returnHeader = parseData.generateHeader(reportConfig, adobeReports[0]);
-                    // run through each report and parse it into a body object
-                    const combinedReport = parseData.getCombinedReport(adobeReports);
-                    const combinedSchedule = parseData.getCombinedSchedule(capiSchedules);
-                    // generate the text body from the body object
-                    requestBodies.forEach((request) => {
-                        finalBodies.push(parseData.generateBody(request, combinedReport, combinedSchedule));
+                    console.log(adobeReports.length);
+                    adobeReports.forEach((element) => {
+                        console.log(element);
                     });
-                    // write the report to a .csv file
-                    finalBodies.forEach((reportBody) => {
-                        console.log(reportBody);
-                    });
-                    // getReport.writeReport(reportConfig, report, returnHeader, returnBody);
                 });
+                // generate the header for the report
+                // const returnHeader = parseData.generateHeader(reportConfig, adobeReports[0]);
+                // // combine your Adobe reports into a single object
+                // const combinedReport = parseData.getCombinedReport(adobeReports);
+                // // combine your schedules into a single object
+                // const combinedSchedule = parseData.getCombinedSchedule(capiSchedules);
+                // requestBodies.forEach((request) => {
+                //     finalBodies.push(parseData.generateBody(request, combinedReport, combinedSchedule));
+                // });
+
+                // console.log("finalBodies length: " + finalBodies.length);
+                // finalBodies.forEach((report) => {
+                //     console.log(report);
+                // });
             });
         }).catch((error) => {
             console.log(error);
