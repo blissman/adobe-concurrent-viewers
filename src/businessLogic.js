@@ -51,25 +51,23 @@ const getReport = {
 
             forEachAsync(reportBodiesArray, (reportBody) => {
                 adobeReports.push(getReport.getAdobe(userConfig, reportConfig, reportBody));
-                
-                // generate the header for the report
-                // const returnHeader = parseData.generateHeader(reportConfig, adobeReports[0]);
-                // // combine your Adobe reports into a single object
-                // const combinedReport = parseData.getCombinedReport(adobeReports);
-                // // combine your schedules into a single object
-                // const combinedSchedule = parseData.getCombinedSchedule(capiSchedules);
-                // requestBodies.forEach((request) => {
-                //     finalBodies.push(parseData.generateBody(request, combinedReport, combinedSchedule));
-                // });
-
-                // console.log("finalBodies length: " + finalBodies.length);
-                // finalBodies.forEach((report) => {
-                //     console.log(report);
-                // });
             }).then(() => {
                 Promise.all(adobeReports).then((values) => {
-                    values.forEach((value) => {
-                        console.log(value);
+                    const finalBodies = [];
+                    // generate the header for the report
+                    const returnHeader = parseData.generateHeader(reportConfig, values[0]);
+                    // combine your Adobe reports into a single object
+                    const combinedReport = parseData.getCombinedReport(values);
+                    // combine your schedules into a single object
+                    const combinedSchedule = parseData.getCombinedSchedule(capiSchedules);
+                    // generate the final reports from the original request bodies
+                    requestBodies.forEach((request) => {
+                        finalBodies.push(parseData.generateBody(request, combinedReport, combinedSchedule));
+                    });
+
+                    console.log("finalBodies length: " + finalBodies.length);
+                    finalBodies.forEach((report) => {
+                        console.log(report);
                     });
                 });
             });
