@@ -71,4 +71,38 @@ describe("utils", () => {
         expect(utils.getSegments(["oneSegment", "twoSegments"])).toEqual([{"id": "oneSegment"}, {"id": "twoSegments"}]);
     });
 
+    it("should return numerical months as a two-digit string", () => {
+        expect(utils.formatMonth(1)).toEqual("01");
+        expect(utils.formatMonth(2)).toEqual("02");
+        expect(utils.formatMonth(3)).toEqual("03");
+        expect(utils.formatMonth(4)).toEqual("04");
+        expect(utils.formatMonth(5)).toEqual("05");
+        expect(utils.formatMonth(6)).toEqual("06");
+        expect(utils.formatMonth(7)).toEqual("07");
+        expect(utils.formatMonth(8)).toEqual("08");
+        expect(utils.formatMonth(9)).toEqual("09");
+        expect(utils.formatMonth(10)).toEqual("10");
+        expect(utils.formatMonth(11)).toEqual("11");
+        expect(utils.formatMonth(12)).toEqual("12");
+        expect(utils.formatMonth(13)).toBeFalsy();
+        expect(utils.formatMonth(0)).toBeFalsy();
+        expect(utils.formatMonth(-1)).toBeFalsy();
+        expect(utils.formatMonth(null)).toBeFalsy();
+        expect(utils.formatMonth()).toBeFalsy();
+        expect(utils.formatMonth(()=>{})).toBeFalsy();
+        expect(utils.formatMonth(true)).toBeFalsy();
+    });
+
+    it("should return numerical dates as a two-digit string", () => {
+        expect(utils.formatDate(1)).toEqual("01");
+        expect(utils.formatDate(13)).toEqual("13");
+        expect(utils.formatDate(31)).toEqual("31");
+        expect(utils.formatDate(32)).toBeFalsy();
+        expect(utils.formatDate(0)).toBeFalsy();
+        expect(utils.formatDate(-1)).toBeFalsy();
+        expect(utils.formatDate(null)).toBeFalsy();
+        expect(utils.formatDate()).toBeFalsy();
+        expect(utils.formatDate(()=>{})).toBeFalsy();
+        expect(utils.formatDate(true)).toBeFalsy();
+    });
 });

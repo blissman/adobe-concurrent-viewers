@@ -1,4 +1,4 @@
-utils = {
+const utils = {
     getDays: (month, year) => {
         if (!month || !year || typeof(month) !== "number" || typeof(year) !== "number" || month < 1 || month > 12) {
             console.log("Error: month or year is invalid!");
@@ -33,6 +33,49 @@ utils = {
         });
 
         return segmentsList;
+    },
+    makeRequest: (url, method) => {
+        const request = new window.XMLHttpRequest();
+
+        return new Promise((resolve, reject) => {
+            request.onreadystatechange = () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status >= 200 && request.status < 300) {
+                    resolve(request);
+                } else {
+                    reject({
+                        status: request.status,
+                        statusText: request.statusText
+                    });
+                }
+            };
+            request.open(method || "GET", url, true);
+            request.send();
+        });
+    },
+    formatMonth: (month) => {
+        if (typeof(month) !== "number" || month < 1 || month > 12) {
+            return false;
+        }
+
+        if (month.toString().length === 1) {
+            return "0" + month.toString();
+        } else {
+            return month.toString();
+        }
+    },
+    formatDate: (date) => {
+        if (typeof(date) !== "number" || date < 1 || date > 31) {
+            return false;
+        }
+
+        if (date.toString().length === 1) {
+            return "0" + date.toString();
+        } else {
+            return date.toString();
+        }
     }
 };
 

@@ -1,10 +1,12 @@
-require("../src/businessLogic.js");
+const getReport = require("../src/businessLogic.js");
+const parseData = require("../src/parseData.js");
+const fs = require("file-system");
 
 describe("businesslogic", () => {
 
     beforeEach(() => {
-        spyOn(window.getReport, "requestBody").and.callThrough();
-        spyOn(window.getReport, "fetch").and.callThrough();
+        spyOn(getReport, "requestBody").and.callThrough();
+        spyOn(fs, "writeFile");
         window.MarketingCloud = {};
         window.MarketingCloud.makeRequest = () => {
             return new Promise((resolve, reject) => {
@@ -114,43 +116,87 @@ describe("businesslogic", () => {
         "runSeconds": 0
     };
 
+    const combinedData = [
+        {
+                "name": "00:24 2019-05-02",
+                "url": "",
+                "counts": ["237"]
+            }, {
+                "name": "00:26 2019-05-02",
+                "url": "",
+                "counts": ["235"]
+            }, {
+                "name": "00:25 2019-05-02",
+                "url": "",
+                "counts": ["236"]
+            }, {
+                "name": "00:23 2019-05-02",
+                "url": "",
+                "counts": ["236"]
+            }
+    ];
+
+    const duplicateCombinedData = [
+        {
+                "name": "00:24 2019-05-02",
+                "url": "",
+                "counts": ["237"]
+            }, {
+                "name": "00:26 2019-05-02",
+                "url": "",
+                "counts": ["235"]
+            }, {
+                "name": "00:25 2019-05-02",
+                "url": "",
+                "counts": ["236"]
+            }, {
+                "name": "00:25 2019-05-02",
+                "url": "",
+                "counts": ["15"]
+            }, {
+                "name": "00:23 2019-05-02",
+                "url": "",
+                "counts": ["236"]
+            }
+    ];
+
     const user = {
-            name: "gerald.butts@canada.ca:Federal Government",
-            sharedSecret: "0be47a0a1aab316891eeae4e6555551b"
-        };
+        name: "gerald.butts@canada.ca:Federal Government",
+        sharedSecret: "0be47a0a1aab316891eeae4e6555551b"
+    };
 
     const report = {
-            rsid: "testrsid",
-            segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
-            type: "daily",
-            month: 5,
-            year: 2019,
-            startDate: "2019-03-12",
-            endDate: "2019-03-13",
-            endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
-            reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
-            maxDataPoints: 2880 // this sets the limit on how many data points to pull (default is 2880)
-        };
+        rsid: "testrsid",
+        segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
+        type: "daily",
+        month: 5,
+        year: 2019,
+        startDate: "2019-05-02",
+        endDate: "2019-05-03",
+        endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
+        reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
+        maxDataPoints: 2880 // this sets the limit on how many data points to pull (default is 2880)
+    };
 
     const monthlyReport = {
-            rsid: "testrsid",
-            segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
-            type: "monthly",
-            month: 5,
-            year: 2019,
-            startDate: "2019-03-12",
-            endDate: "2019-03-13",
-            endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
-            reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
-            maxDataPoints: 5000 // this sets the limit on how many data points to pull (default is 2880)
-        };
+        rsid: "testrsid",
+        segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
+        type: "monthly",
+        month: 5,
+        year: 2019,
+        startDate: "2019-05-02",
+        endDate: "2019-05-03",
+        endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
+        reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
+        maxDataPoints: 5000 // this sets the limit on how many data points to pull (default is 2880)
+    };
 
 
-    const result = [{
+    const requestBody = [{
         "reportDescription": {
             "reportSuiteID": "testrsid",
-            "dateFrom": "2019-03-12",
-            "dateTo": "2019-03-13",
+            "dateFrom": "2019-05-02",
+            "dateTo": "2019-05-03",
             "metrics": [{
                 "id": "instances"
             }],
@@ -167,45 +213,52 @@ describe("businesslogic", () => {
     }];
 
     it("should return false if getReport.requestBody() is called without a report config object", () => {
-        expect(window.getReport.requestBody(undefined)).toBeFalsy();
-        expect(window.getReport.requestBody(null)).toBeFalsy();
-        expect(window.getReport.requestBody(() => {})).toBeFalsy();
-        expect(window.getReport.requestBody(32)).toBeFalsy();
-        expect(window.getReport.requestBody("string")).toBeFalsy();
+        expect(getReport.requestBody(undefined)).toBeFalsy();
+        expect(getReport.requestBody(null)).toBeFalsy();
+        expect(getReport.requestBody(() => {})).toBeFalsy();
+        expect(getReport.requestBody(32)).toBeFalsy();
+        expect(getReport.requestBody("string")).toBeFalsy();
     });
 
     it("should return a body object if getReport.requestBody() is called with a report config object set", () => {
-        expect(window.getReport.requestBody(report)).toEqual(result);
+        expect(getReport.requestBody(report)).toEqual(requestBody);
     });
 
     it("should return a monthly body object if getReport.requestBody() is called with a report config object set", () => {
-        expect(window.getReport.requestBody(monthlyReport)).toBeTruthy();
-        expect(window.getReport.requestBody(monthlyReport).length).toEqual(30);
+        const monthlyReportBody = getReport.requestBody(monthlyReport);
+        expect(monthlyReportBody).toBeTruthy();
+        expect(monthlyReportBody.length).toEqual(31);
+        expect(monthlyReportBody[0].reportDescription.dateFrom).toEqual("2019-05-01");
+        expect(monthlyReportBody[0].reportDescription.dateTo).toEqual("2019-05-02");
+        expect(monthlyReportBody[4].reportDescription.dateFrom).toEqual("2019-05-05");
+        expect(monthlyReportBody[4].reportDescription.dateTo).toEqual("2019-05-06");
+        expect(monthlyReportBody[30].reportDescription.dateFrom).toEqual("2019-05-31");
+        expect(monthlyReportBody[30].reportDescription.dateTo).toEqual("2019-06-01");
     });
 
     it("should return false if init is called with invalid user and/or report configurations", () => {
-        expect(window.getReport.init(undefined, report)).toBeFalsy();
-        expect(window.getReport.init(null, report)).toBeFalsy();
-        expect(window.getReport.init(() => {}, report)).toBeFalsy();
-        expect(window.getReport.init(32, report)).toBeFalsy();
-        expect(window.getReport.init("string", report)).toBeFalsy();
-        expect(window.getReport.init(user, undefined)).toBeFalsy();
-        expect(window.getReport.init(user, null)).toBeFalsy();
-        expect(window.getReport.init(user, () => {})).toBeFalsy();
-        expect(window.getReport.init(user, 32)).toBeFalsy();
-        expect(window.getReport.init(user, "string")).toBeFalsy();
+        expect(getReport.init(undefined, report)).toBeFalsy();
+        expect(getReport.init(null, report)).toBeFalsy();
+        expect(getReport.init(() => {}, report)).toBeFalsy();
+        expect(getReport.init(32, report)).toBeFalsy();
+        expect(getReport.init("string", report)).toBeFalsy();
+        expect(getReport.init(user, undefined)).toBeFalsy();
+        expect(getReport.init(user, null)).toBeFalsy();
+        expect(getReport.init(user, () => {})).toBeFalsy();
+        expect(getReport.init(user, 32)).toBeFalsy();
+        expect(getReport.init(user, "string")).toBeFalsy();
     });
 
     it("should generate a request body if init is called with valid user and report configurations", () => {
-        window.getReport.init(user, report);
-        expect(window.getReport.requestBody).toHaveBeenCalledWith({
+        getReport.init(user, report);
+        expect(getReport.requestBody).toHaveBeenCalledWith({
             rsid: 'testrsid',
             segmentId: ['s311108103_5cccaa0d85d04262783da2e6'],
             type: "daily",
             month: 5,
             year: 2019,
-            startDate: '2019-03-12',
-            endDate: '2019-03-13',
+            startDate: '2019-05-02',
+            endDate: '2019-05-03',
             reportTimeout: 30000,
             maxDataPoints: 2880,
             endpoint: "api.omniture.com"
@@ -213,12 +266,12 @@ describe("businesslogic", () => {
     });
 
     it("should generate different header values for monthly and daily reports", () => {
-        expect(window.parseData.generateHeader(data, report)).toEqual("Type,ranked\nElements,Video Concurrent Viewers\nReport Suite,id,bellmediatsnprod\n,name,TSN - Prod\nPeriod,Thu.  2 May 2019 - Fri.  3 May 2019\nSegments,id,s300008103_5cccaa0d85d04262783da2e6 \n,Name,TSN Live Streams \nData\nTime,Unix Timestamp,Count,URL\n");
-        expect(window.parseData.generateHeader(data, monthlyReport)).toEqual("Type,ranked\nElements,Video Concurrent Viewers\nReport Suite,id,bellmediatsnprod\n,name,TSN - Prod\nPeriod,May - 2019\nSegments,id,s300008103_5cccaa0d85d04262783da2e6 \n,Name,TSN Live Streams \nData\nTime,Unix Timestamp,Count,URL\n");
+        expect(parseData.generateHeader(report, data)).toEqual("Type|ranked\nElements|Video Concurrent Viewers\nReport Suite|id|bellmediatsnprod\n|name|TSN - Prod\nPeriod|Thu.  2 May 2019 - Fri.  3 May 2019\nSegments|id|s300008103_5cccaa0d85d04262783da2e6 \n|Name|TSN Live Streams \nData\nTime|Unix Timestamp|Count|URL|showName|showDescription\n");
+        expect(parseData.generateHeader(monthlyReport, data)).toEqual("Type|ranked\nElements|Video Concurrent Viewers\nReport Suite|id|bellmediatsnprod\n|name|TSN - Prod\nPeriod|May - 2019\nSegments|id|s300008103_5cccaa0d85d04262783da2e6 \n|Name|TSN Live Streams \nData\nTime|Unix Timestamp|Count|URL|showName|showDescription\n");
     });
 
 
-    it("should parse the data body into CSV format", () => {
+    it("should parse the data body into pipe separated format", () => {
         const body = {
             "1556770980": {
                 "URL": "",
@@ -241,13 +294,13 @@ describe("businesslogic", () => {
                 "time": "00:26 2019-05-02"
             }
         };
-
-        const report = "00:23 2019-05-02,1556770980,236,\n00:24 2019-05-02,1556771040,237,\n00:25 2019-05-02,1556771100,236,\n00:26 2019-05-02,1556771160,235,\n";
-        expect(window.parseData.generateBody(data)).toEqual(body);
-        expect(window.parseData.generateReport(body)).toEqual(report);
+        const report = "00:23 2019-05-02|1556770980|236|||\n00:24 2019-05-02|1556771040|237|||\n00:25 2019-05-02|1556771100|236|||\n00:26 2019-05-02|1556771160|235|||\n";
+        expect(parseData.getCombinedReport([data])).toEqual(combinedData);
+        expect(parseData.generateBody(requestBody[0], combinedData)).toEqual(body);
+        expect(parseData.generateReport(body)).toEqual(report);
     });
 
-    it("should parse the data body into CSV format without duplicating times", () => {
+    it("should parse the data body into pipe separated format without duplicating times", () => {
         const body = {
             "1556770980": {
                 "URL": "",
@@ -271,8 +324,113 @@ describe("businesslogic", () => {
             }
         };
 
-        const report = "00:23 2019-05-02,1556770980,236,\n00:24 2019-05-02,1556771040,237,\n00:25 2019-05-02,1556771100,15,\n00:26 2019-05-02,1556771160,235,\n";
-        expect(window.parseData.generateBody(duplicateData)).toEqual(body);
-        expect(window.parseData.generateReport(body)).toEqual(report);
+        const report = "00:23 2019-05-02|1556770980|236|||\n00:24 2019-05-02|1556771040|237|||\n00:25 2019-05-02|1556771100|15|||\n00:26 2019-05-02|1556771160|235|||\n";
+        expect(parseData.getCombinedReport([duplicateData])).toEqual(duplicateCombinedData);
+        expect(parseData.generateBody(requestBody[0], duplicateCombinedData)).toEqual(body);
+        expect(parseData.generateReport(body)).toEqual(report);
     });
+
+    it("should output a report in pipe separated format for daily reports", () => {
+        const reportConfig = {
+            rsid: 'bellmediatsnprod',
+            segmentId: ['s300008103_5cd09d1f5965266a6dcb5c79'],
+            type: 'daily',
+            month: 4,
+            year: 2019,
+            startDate: '2019-06-13',
+            endDate: '2019-06-14',
+            endpoint: 'api.omniture.com',
+            reportTimeout: 20000,
+            maxDataPoints: 2880,
+            capi: {
+                isEnabled: true,
+                channel: 'TSN5'
+            }
+        };
+        const report = {
+            report: {
+                type: 'ranked',
+                elements: [
+                    [Object]
+                ],
+                reportSuite: {
+                    id: 'bellmediatsnprod',
+                    name: 'TSN - Prod'
+                },
+                period: 'Thu. 13 Jun. 2019 - Fri. 14 Jun. 2019',
+                metrics: [
+                    [Object]
+                ],
+                segments: [
+                    {
+                        name: "TSN5", 
+                        id: 's300008103_5cd09d1f5965266a6dcb5c79'
+                    }
+                ],
+                data: [],
+                totals: ['9271'],
+                version: '1.4.18.10'
+            },
+            waitSeconds: 0,
+            runSeconds: 0
+        };
+        const header = "Type|ranked\nElements|Video Concurrent Viewers\nReport Suite|id|bellmediatsnprod\n|name|TSN - Prod\nPeriod|Thu. 13 Jun. 2019 - Fri. 14 Jun. 2019\nSegments|id|s300008103_5cd09d1f5965266a6dcb5c79 \n|Name|TSN 5 Live Stream \nData\nTime|Unix Timestamp|Count|URL|showName|showDescription\n";
+        const body = "00:00 2019-06-13|1560398400|4||SC With Jay and Dan - SC With Jay and Dan|The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.";
+        const pipeSeparatedOutput = header + body;
+
+        expect(getReport.writeReport(reportConfig, report, header, body)).toEqual(pipeSeparatedOutput);
+    });
+
+
+    it("should output a report in pipe separated format for monthly reports", () => {
+        const reportConfig = {
+            rsid: 'bellmediatsnprod',
+            segmentId: ['s300008103_5cd09d1f5965266a6dcb5c79'],
+            type: 'monthly',
+            month: 4,
+            year: 2019,
+            startDate: '2019-06-13',
+            endDate: '2019-06-14',
+            endpoint: 'api.omniture.com',
+            reportTimeout: 20000,
+            maxDataPoints: 2880,
+            capi: {
+                isEnabled: true,
+                channel: 'TSN5'
+            }
+        };
+        const report = {
+            report: {
+                type: 'ranked',
+                elements: [
+                    [Object]
+                ],
+                reportSuite: {
+                    id: 'bellmediatsnprod',
+                    name: 'TSN - Prod'
+                },
+                period: 'Thu. 13 Jun. 2019 - Fri. 14 Jun. 2019',
+                metrics: [
+                    [Object]
+                ],
+                segments: [
+                    {
+                        name: "TSN5", 
+                        id: 's300008103_5cd09d1f5965266a6dcb5c79'
+                    }
+                ],
+                data: [],
+                totals: ['9271'],
+                version: '1.4.18.10'
+            },
+            waitSeconds: 0,
+            runSeconds: 0
+        };
+        const header = "Type|ranked\nElements|Video Concurrent Viewers\nReport Suite|id|bellmediatsnprod\n|name|TSN - Prod\nPeriod|Thu. 13 Jun. 2019 - Fri. 14 Jun. 2019\nSegments|id|s300008103_5cd09d1f5965266a6dcb5c79 \n|Name|TSN 5 Live Stream \nData\nTime|Unix Timestamp|Count|URL|showName|showDescription\n";
+        const body = "00:00 2019-06-13|1560398400|4||SC With Jay and Dan - SC With Jay and Dan|The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.";
+        const pipeSeparatedOutput = header + body;
+
+        expect(getReport.writeReport(reportConfig, report, header, body)).toEqual(pipeSeparatedOutput);
+    });
+
 });

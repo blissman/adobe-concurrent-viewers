@@ -54,7 +54,11 @@ In some cases (if running large datasets, or complicated segments) the reports c
 
 ### Missing Data?
 
-By default, this report is set to return the top 2880 values. If you're requesting a big data set, this means that times and values can be dropped. By increasing this value in ```src/config/report.js``` you can mitigate this by requesting more data points.
+By default, this report is set to return the top 5760 values. This should typically get a data point for each minute of the day, however you can choose to increase this value if numbers are missing.
+
+### Limitations
+
+This CAPI branch currently allows one to pull daily data with CAPI schedules included in the processing and parsing. For the moment, monthly data collection will not function owing to changes to the architecture. This will be included in a future improvement.
 
 ## Credits
 
