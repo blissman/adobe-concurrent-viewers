@@ -50,14 +50,8 @@ const getReport = {
             const finalBodies = [];
 
             forEachAsync(reportBodiesArray, (reportBody) => {
-                getReport.getAdobe(userConfig, reportConfig, reportBody).then((report) => {
-                    adobeReports.push(report);
-                }).then(() => {
-                    console.log(adobeReports.length);
-                    adobeReports.forEach((element) => {
-                        console.log(element);
-                    });
-                });
+                adobeReports.push(getReport.getAdobe(userConfig, reportConfig, reportBody));
+                
                 // generate the header for the report
                 // const returnHeader = parseData.generateHeader(reportConfig, adobeReports[0]);
                 // // combine your Adobe reports into a single object
@@ -72,6 +66,12 @@ const getReport = {
                 // finalBodies.forEach((report) => {
                 //     console.log(report);
                 // });
+            }).then(() => {
+                Promise.all(adobeReports).then((values) => {
+                    values.forEach((value) => {
+                        console.log(value);
+                    });
+                });
             });
         }).catch((error) => {
             console.log(error);
