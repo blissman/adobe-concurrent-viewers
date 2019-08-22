@@ -46,14 +46,12 @@ const getReport = {
 
         Promise.all([queueAdobe, getCapi, timeoutPromise]).then((values) => {
             const reportBodiesArray = values[0];
-            const schedulesArray = values[1];
-            const finalBodies = [];
 
             forEachAsync(reportBodiesArray, (reportBody) => {
                 adobeReports.push(getReport.getAdobe(userConfig, reportConfig, reportBody));
             }).then(() => {
                 Promise.all(adobeReports).then((values) => {
-                    const finalBodies = [];
+                    const bodyArray = [];
                     // generate the header for the report
                     const returnHeader = parseData.generateHeader(reportConfig, values[0]);
                     // combine your Adobe reports into a single object
@@ -62,13 +60,15 @@ const getReport = {
                     const combinedSchedule = parseData.getCombinedSchedule(capiSchedules);
                     // generate the final reports from the original request bodies
                     requestBodies.forEach((request) => {
-                        finalBodies.push(parseData.generateBody(request, combinedReport, combinedSchedule));
+                        bodyArray.push(parseData.generateBody(request, combinedReport, combinedSchedule));
                     });
+                    // flatten the report body array into a single object
+                    const combinedBody = parseData.getCombinedBody(bodyArray);
+                    // generate the final report from the combined body
+                    const returnBody = parseData.generateReport(combinedBody);
+                    //write the report
+                    getReport.writeReport(reportConfig, values[0], returnHeader, returnBody);
 
-                    console.log("finalBodies length: " + finalBodies.length);
-                    finalBodies.forEach((report) => {
-                        console.log(report);
-                    });
                 });
             });
         }).catch((error) => {

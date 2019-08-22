@@ -561,7 +561,7 @@ describe("parseData methods", () => {
     });
 
     it("should return a combined report including Adobe and Capi data", () => {
-        const flattenedBody = parseData.getCombinedBody(bodyArray);
-        expect(parseData.generateReport(flattenedBody)).toEqual(combinedBodyOutput);
+        const combinedBody = parseData.getCombinedBody(bodyArray);
+        expect(parseData.generateReport(combinedBody)).toEqual(combinedBodyOutput);
     });
 });
