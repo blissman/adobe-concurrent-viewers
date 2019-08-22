@@ -2,7 +2,7 @@ const parseData = require("../src/parseData.js");
 
 describe("parseData methods", () => {
 
-    const testSchedule = [{
+     const testSchedule = [{
             showName: 'SC With Jay and Dan - SC With Jay and Dan',
             showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.",
             startTime: 1554091200,
@@ -141,6 +141,99 @@ describe("parseData methods", () => {
         }
     ];
 
+    const bodyArray = [{
+            '1554091200': {
+                time: '00:00 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            },
+            '1554091260': {
+                time: '00:01 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            },
+            '1554091320': {
+                time: '00:02 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            }
+        }, {
+            '1554091380': {
+                time: '00:03 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            },
+            '1554091440': {
+                time: '00:04 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            },
+            '1554091500': {
+                time: '00:05 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            }
+        }];
+
+    const bodyArrayResult = {
+            '1554091200': {
+                time: '00:00 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            },
+            '1554091260': {
+                time: '00:01 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            },
+            '1554091320': {
+                time: '00:02 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            },
+            '1554091380': {
+                time: '00:03 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            },
+            '1554091440': {
+                time: '00:04 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            },
+            '1554091500': {
+                time: '00:05 2019-04-01',
+                concurrentViewers: ['75'],
+                URL: '',
+                showName: 'SC With Jay and Dan - SC With Jay and Dan',
+                showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole."
+            }
+    };
+
+    const combinedBodyOutput = "00:00 2019-04-01|1554091200|75||SC With Jay and Dan - SC With Jay and Dan|The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.\n00:01 2019-04-01|1554091260|75||SC With Jay and Dan - SC With Jay and Dan|The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.\n00:02 2019-04-01|1554091320|75||SC With Jay and Dan - SC With Jay and Dan|The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.\n00:03 2019-04-01|1554091380|75||SC With Jay and Dan - SC With Jay and Dan|The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.\n00:04 2019-04-01|1554091440|75||SC With Jay and Dan - SC With Jay and Dan|The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.\n00:05 2019-04-01|1554091500|75||SC With Jay and Dan - SC With Jay and Dan|The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.\n";
+
     const requestBody = [{
         "reportDescription": {
             "reportSuiteID": "testrsid",
@@ -161,8 +254,7 @@ describe("parseData methods", () => {
         }
     }];
 
-    const adobeReportArray = [
-            {
+    const adobeReportArray = [{
             "report": {
                 "type": "ranked",
                 "elements": [{
@@ -293,8 +385,7 @@ describe("parseData methods", () => {
     }];
 
     const capiScheduleArray = [
-        [
-            {
+        [{
                 showName: 'SC With Jay and Dan - SC With Jay and Dan',
                 showDescription: "The latest scores and highlights, with hosts Jay Onrait and Dan O'Toole.",
                 startTime: 1554091200,
@@ -373,8 +464,7 @@ describe("parseData methods", () => {
                 endTime: 1554136200
             }
         ],
-        [
-            {
+        [{
                 showName: 'SportsCentre - SportsCentre',
                 showDescription: 'News, highlights, analysis and interviews from the world of sports.',
                 startTime: 1554136200,
@@ -466,7 +556,12 @@ describe("parseData methods", () => {
         expect(parseData.getCombinedReport(adobeReportArray)).toEqual(combinedReport);
     });
 
+    it("should flatten an array of body objects", () => {
+        expect(parseData.getCombinedBody(bodyArray)).toEqual(bodyArrayResult);
+    });
+
     it("should return a combined report including Adobe and Capi data", () => {
-        expect(parseData.generateBody(requestBody, combinedReport, testSchedule)).toEqual(true);
+        const flattenedBody = parseData.getCombinedBody(bodyArray);
+        expect(parseData.generateReport(flattenedBody)).toEqual(combinedBodyOutput);
     });
 });

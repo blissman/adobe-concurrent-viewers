@@ -99,6 +99,16 @@ const parseData = {
         });
 
         return combinedReport;
+    }, getCombinedBody: (bodyArray) => {
+        const combinedBody = {};
+        bodyArray.forEach((body) => {
+            const timeArray = Object.keys(body);
+            timeArray.forEach((timestamp) => {
+                combinedBody[timestamp] = body[timestamp];
+            });
+        });
+
+        return combinedBody;
     }
 };
 
