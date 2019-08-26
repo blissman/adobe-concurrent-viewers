@@ -48,7 +48,7 @@ const getReport = {
             const reportBodiesArray = values[0];
 
             forEachAsync(reportBodiesArray, (reportBody) => {
-                adobeReports.push(getReport.getAdobe(userConfig, reportConfig, reportBody));
+                adobeReports.push(getReport.getAdobe(userConfig, reportConfig, "Report.Get", reportBody));
             }).then(() => {
                 Promise.all(adobeReports).then((values) => {
                     const bodyArray = [];
@@ -198,9 +198,9 @@ const getReport = {
             console.log(error);
         });
     },
-    getAdobe: (userConfig, reportConfig, body) => {
+    getAdobe: (userConfig, reportConfig, reportType, body) => {
         return new Promise((resolve, reject) => {
-            MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Get", body).then((data) => {
+            MarketingCloud.makeRequest(userConfig, reportConfig, reportType, body).then((data) => {
                 if (data.responseText && JSON.parse(data.responseText).report) {
                     resolve(JSON.parse(data.responseText));
                 } else {
