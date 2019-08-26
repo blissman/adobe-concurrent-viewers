@@ -90,7 +90,8 @@ const parseData = {
         });
 
         return combinedSchedule;
-    }, getCombinedReport: (reportsArray) => {
+    },
+    getCombinedReport: (reportsArray) => {
         const combinedReport = [];
         reportsArray.forEach((report) => {
             report.report.data.forEach((entry) => {
@@ -99,7 +100,8 @@ const parseData = {
         });
 
         return combinedReport;
-    }, getCombinedBody: (bodyArray) => {
+    },
+    getCombinedBody: (bodyArray) => {
         const combinedBody = {};
         bodyArray.forEach((body) => {
             const timeArray = Object.keys(body);
