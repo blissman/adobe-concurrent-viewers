@@ -183,7 +183,7 @@ const getReport = {
     },
     queueAdobe: (userConfig, reportConfig, reportType, requestBody) => {
         return new Promise((resolve, reject) => {
-            MarketingCloud.makeRequest(userConfig, reportConfig, "Report.Queue", requestBody).then((data) => {
+            MarketingCloud.makeRequest(userConfig, reportConfig, reportType, requestBody).then((data) => {
                 if (JSON.parse(data.responseText).reportID) {
                     const reportID = JSON.parse(data.responseText).reportID;
                     requestBody.reportID = reportID;
