@@ -11,7 +11,7 @@ const report = {
     maxDataPoints: 5760, // this sets the limit on how many data points to pull (default is 5760, increase to get more data points)
     capi: {
         isEnabled: false, // enable to call against capi to get your schedule name
-        channel: "someChannel" // TSN1, TSN2, TSN3, TSN4, TSN5, etc.
+        channel: "someChannel" // TSN1, CRAVE4, HBO2, STARZ3, CTV2, etc.
     }
 };
 
