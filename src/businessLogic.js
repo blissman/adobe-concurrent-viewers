@@ -3,6 +3,7 @@ const MarketingCloud = require("./adobeDependencies/marketing_cloud.js");
 const fs = require("file-system");
 const parseData = require("./parseData.js");
 const forEachAsync = require("foreachasync").forEachAsync;
+const capiConfig = require("./capiConfig.js");
 
 const getReport = {
     reportValue: "",
@@ -150,7 +151,7 @@ const getReport = {
     checkCapi: (reportConfig, requestBody) => {
         return new Promise((resolve, reject) => {
             if (reportConfig && reportConfig.capi && reportConfig.capi.isEnabled && typeof(reportConfig.capi.channel) === "string") {
-                const URL = "http://capi.9c9media.com/destinations/tsn_web/platforms/desktop/channelaffiliates/" + reportConfig.capi.channel + "-G/schedules?StartTime=" + requestBody.reportDescription.dateFrom + "T00:00:00&EndTime=" + requestBody.reportDescription.dateTo + "T00:00:00";
+                const URL = capiConfig.getURL(reportConfig.capi.channel, requestBody.reportDescription.dateFrom, requestBody.reportDescription.dateTo);
                 utils.makeRequest(URL).then(
                     (data) => {
                         const returnArray = [];
