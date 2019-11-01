@@ -13,4 +13,6 @@ const user = require("./config/user.js");
 const report = require("./config/report.js");
 const getReport = require("./businessLogic.js");
 
-getReport.init(user, report);
+report.forEach((config) => {
+    getReport.init(user, config);
+});
