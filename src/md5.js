@@ -21,7 +21,6 @@
 
 /* eslint-disable strict */
 
-;
 (function($) {
     'use strict'
 
