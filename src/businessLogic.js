@@ -4,6 +4,7 @@ const fs = require("file-system");
 const parseData = require("./parseData.js");
 const forEachAsync = require("foreachasync").forEachAsync;
 const capiConfig = require("./capiConfig.js");
+const md5 = require("./md5.js");
 
 const getReport = {
     reportValue: "",
@@ -224,6 +225,13 @@ const getReport = {
         let segmentName;
         if (reportData.segments && reportData.segments[0] && reportData.segments.length === 1) {
             segmentName = reportData.segments[0].name + "(" + reportData.segments[0].id + ")";
+        } else if (reportData.segments && reportData.segments.length > 1) {
+            const segmentsArray = [];
+            reportData.segments.forEach((segment) => {
+                segmentsArray.push(segment.id);
+            });
+            const joinedSegmentIds = segmentsArray.join('');
+            segmentName = reportData.segments[0].name + "(" + md5(joinedSegmentIds) + ")";
         } else {
             segmentName = reportData.reportSuite.name + "(" + reportData.reportSuite.id + ")";
         }
