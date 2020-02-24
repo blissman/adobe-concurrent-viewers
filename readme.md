@@ -46,7 +46,7 @@ If you have everything set up, it should be as simple as going to a new terminal
 $ sudo node src/getReport.js
 ```
 
-Keep in mind that you need to use "sudo" to have admin rights ot create your file. Your output files can be found in the reports folder.
+Keep in mind that you need to use "sudo" to have admin rights to create your file. Your output files can be found in the reports folder.
 
 ### Report Errors
 
