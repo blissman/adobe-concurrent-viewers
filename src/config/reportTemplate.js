@@ -1,6 +1,6 @@
 const report = [{
         rsid: "exampleRSID", // your RSID name
-        segmentId: ["someSegmentId"], // insert your segment ids here as an array of strings, otherwise an empty string for no segment (note: this combines segments--it does not run them separately)
+        segmentId: ["someSegmentId"], // insert your segment ids here as an array of strings, otherwise remote the key for no segment (note: this combines segments--it does not run them separately)
         type: "daily", // can be daily or monthly
         month: 5, // 1-12 representing January-December: the month for monthly reports
         year: 2019, // the desired year for monthly reports
