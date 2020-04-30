@@ -20,8 +20,8 @@
     },
     "homepage": "https://github.com/blissman/adobeAnalyticsToCSV#readme",
     "devDependencies": {
-        "@babel/core": "^7.9.0",
-        "@babel/preset-env": "^7.9.5",
+        "@babel/core": "^7.9.6",
+        "@babel/preset-env": "^7.9.6",
         "@babel/register": "^7.9.0",
         "del": "^5.1.0",
         "file-system": "^2.2.2",
@@ -35,8 +35,8 @@
         "gulp-jsbeautifier": "^3.0.1",
         "gulp-uglify": "^3.0.2",
         "gulp-uglify-es": "^2.0.0",
-        "jest": "^25.3.0",
-        "jquery": "^3.4.1"
+        "jest": "^25.5.2",
+        "jquery": "^3.5.0"
     },
     "jest": {
         "collectCoverage": true,
