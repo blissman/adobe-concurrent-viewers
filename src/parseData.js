@@ -10,7 +10,7 @@ const parseData = {
         header += "|name|" + report.reportSuite.name + "\n";
         header += "Period|";
         if (reportConfig && reportConfig.type === "monthly") {
-            header += utils.getMonthName(reportConfig.month) + " - " + reportConfig.year + "\n";
+            header += utils.getMonthName(reportConfig.monthlyConfig.month) + " - " + reportConfig.monthlyConfig.year + "\n";
         } else {
             header += report.period + "\n";
         }

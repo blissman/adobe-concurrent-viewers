@@ -169,10 +169,14 @@ describe("businesslogic", () => {
         rsid: "testrsid",
         segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
         type: "daily",
-        month: 5,
-        year: 2019,
-        startDate: "2019-05-02",
-        endDate: "2019-05-03",
+        monthlyConfig: {
+            month: 5,
+            year: 2019,
+        },
+        dailyConfig: {
+            startDate: "2019-05-02",
+            endDate: "2019-05-03",
+        },
         endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
         reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
         maxDataPoints: 2880 // this sets the limit on how many data points to pull (default is 2880)
@@ -182,10 +186,14 @@ describe("businesslogic", () => {
         rsid: "testrsid",
         segmentId: ["s311108103_5cccaa0d85d04262783da2e6"],
         type: "monthly",
-        month: 5,
-        year: 2019,
-        startDate: "2019-05-02",
-        endDate: "2019-05-03",
+        monthlyConfig: {
+            month: 5,
+            year: 2019,
+        },
+        dailyConfig: {
+            startDate: "2019-05-02",
+            endDate: "2019-05-03",
+        },
         endpoint: "api.omniture.com", // Adobe's San Jose datacentre (api2.omniture.com = Dallas, api3.omniture.com = London, api4.omniture.com = Singapore)
         reportTimeout: 30000, // time to wait (ms) between reports to allow Adobe to generate them (default is 30 seconds, increase if you're getting report errors)
         maxDataPoints: 5000 // this sets the limit on how many data points to pull (default is 2880)
@@ -255,10 +263,14 @@ describe("businesslogic", () => {
             rsid: 'testrsid',
             segmentId: ['s311108103_5cccaa0d85d04262783da2e6'],
             type: "daily",
-            month: 5,
-            year: 2019,
-            startDate: '2019-05-02',
-            endDate: '2019-05-03',
+            monthlyConfig: {
+                month: 5,
+                year: 2019,
+            },
+            dailyConfig: {
+                startDate: '2019-05-02',
+                endDate: '2019-05-03',
+            },
             reportTimeout: 30000,
             maxDataPoints: 2880,
             endpoint: "api.omniture.com"
@@ -335,10 +347,14 @@ describe("businesslogic", () => {
             rsid: 'bellmediatsnprod',
             segmentId: ['s300008103_5cd09d1f5965266a6dcb5c79'],
             type: 'daily',
-            month: 4,
-            year: 2019,
-            startDate: '2019-06-13',
-            endDate: '2019-06-14',
+            monthlyConfig: {
+                month: 4,
+                year: 2019,
+            },
+            dailyConfig: {
+                startDate: '2019-06-13',
+                endDate: '2019-06-14',
+            },
             endpoint: 'api.omniture.com',
             reportTimeout: 20000,
             maxDataPoints: 2880,
@@ -387,10 +403,14 @@ describe("businesslogic", () => {
             rsid: 'bellmediatsnprod',
             segmentId: ['s300008103_5cd09d1f5965266a6dcb5c79'],
             type: 'monthly',
-            month: 4,
-            year: 2019,
-            startDate: '2019-06-13',
-            endDate: '2019-06-14',
+            monthlyConfig: {
+                month: 4,
+                year: 2019,
+            },
+            dailyConfig: {
+                startDate: '2019-06-13',
+                endDate: '2019-06-14',
+            },
             endpoint: 'api.omniture.com',
             reportTimeout: 20000,
             maxDataPoints: 2880,
