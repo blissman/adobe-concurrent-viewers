@@ -16,10 +16,11 @@ const getReport = {
         }
         // generate request bodies from the config
         const requestBodies = getReport.requestBody(reportConfig);
-        // establish arrays for storing your reportBodies, capiSchedules, and reports
+        // establish arrays for storing your reportBodies, capiSchedules, reports, and processes
         const reportBodies = [];
         const capiSchedules = [];
         const adobeReports = [];
+        const processes = [];
         // queue each report with Adobe
         const queueAdobe = forEachAsync(requestBodies, (element) => {
             getReport.queueAdobe(userConfig, reportConfig, "Report.Queue", element).then((reportBody) => {
@@ -31,22 +32,29 @@ const getReport = {
                 resolve(reportBodies);
             });
         });
+        processes.push(queueAdobe);
+
         // get your capi schedules
-        const getCapi = forEachAsync(requestBodies, (element) => {
-            getReport.checkCapi(reportConfig, element).then((capiSchedule) => {
-                capiSchedules.push(capiSchedule);
+        if (reportConfig && reportConfig.capi && reportConfig.capi.isEnabled) {
+            const getCapi = forEachAsync(requestBodies, (element) => {
+                getReport.checkCapi(reportConfig, element).then((capiSchedule) => {
+                    capiSchedules.push(capiSchedule);
+                });
+            }).then(() => {
+                return new Promise((resolve, reject) => {
+                    resolve(capiSchedules);
+                });
             });
-        }).then(() => {
-            return new Promise((resolve, reject) => {
-                resolve(capiSchedules);
-            });
-        });
+
+            processes.push(getCapi)
+        }
         // set a timeout while Adobe processes your reports
         const timeoutPromise = new Promise((resolve, reject) => {
             setTimeout(resolve, reportConfig.reportTimeout);
         });
+        processes.push(timeoutPromise);
 
-        Promise.all([queueAdobe, getCapi, timeoutPromise]).then((values) => {
+        Promise.all(processes).then((values) => {
             const reportBodiesArray = values[0];
 
             forEachAsync(reportBodiesArray, (reportBody) => {
@@ -230,7 +238,7 @@ const getReport = {
             reportData.segments.forEach((segment) => {
                 segmentsArray.push(segment.id);
             });
-            const joinedSegmentIds = segmentsArray.join('');
+            const joinedSegmentIds = segmentsArray.join("");
             segmentName = reportData.segments[0].name + "(" + md5(joinedSegmentIds) + ")";
         } else {
             segmentName = reportData.reportSuite.name + "(" + reportData.reportSuite.id + ")";

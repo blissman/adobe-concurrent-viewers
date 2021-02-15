@@ -1,8 +1,8 @@
-# Adobe Analytics to CSV
+# Adobe Concurrent Viewers
 
 ## Overview
 
-This is a tool for downloading data from Adobe Analytics' report APIs and outputting to a CSV (presumably for Excel importation).
+This is a tool for downloading concurrent viewership data from Adobe Analytics' report APIs and outputting to a pipe-separated file.
 
 ## Pre-Requisites
 

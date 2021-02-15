@@ -1,4 +1,5 @@
-const report = [{
+const report = [
+    {
         rsid: "exampleRSID", // your RSID name
         segmentId: ["someSegmentId"], // insert your segment ids here as an array of strings, otherwise remote the key for no segment (note: this combines segments--it does not run them separately)
         type: "daily", // can be daily or monthly

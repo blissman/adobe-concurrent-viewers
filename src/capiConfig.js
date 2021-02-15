@@ -35,10 +35,10 @@ const capiConfig = {
         }
 
         if (STARZtest.test(channel)) {
-            return "https://capi.9c9media.com/destinations/craveplus_atexace/platforms/atexace/channelaffiliates/" + channel + "-G/schedules?StartTime=" + startDate + "T00:00:00&EndTime=" + endDate + "T00:00:00"
+            return "https://capi.9c9media.com/destinations/craveplus_atexace/platforms/atexace/channelaffiliates/" + channel + "-G/schedules?StartTime=" + startDate + "T00:00:00&EndTime=" + endDate + "T00:00:00";
         }
 
-        console.warn("Invalid Capi Channel!")
+        console.warn("Invalid Capi Channel!");
         return "Invalid Capi Channel!";
     }
 };
