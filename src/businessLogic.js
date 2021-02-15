@@ -33,6 +33,7 @@ const getReport = {
             });
         });
         processes.push(queueAdobe);
+
         // get your capi schedules
         if (reportConfig && reportConfig.capi && reportConfig.capi.isEnabled) {
             const getCapi = forEachAsync(requestBodies, (element) => {
