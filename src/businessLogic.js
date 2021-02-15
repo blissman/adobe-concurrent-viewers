@@ -97,8 +97,8 @@ const getReport = {
         const rsid = reportConfig.rsid;
         const segmentId = reportConfig.segmentId;
         if (type === "daily") {
-            startDate = reportConfig.startDate;
-            endDate = reportConfig.endDate;
+            startDate = reportConfig.dailyConfig.startDate;
+            endDate = reportConfig.dailyConfig.endDate;
             const body = {
                 "reportDescription": {
                     "reportSuiteID": rsid,
@@ -118,10 +118,10 @@ const getReport = {
             };
             bodyArray.push(body);
         } else if (type === "monthly") {
-            const year = reportConfig.year.toString();
-            const month = utils.formatMonth(reportConfig.month);
-            const totalDays = utils.getDays(reportConfig.month, reportConfig.year);
-            const nextMonthValue = utils.formatMonth(reportConfig.month + 1);
+            const year = reportConfig.monthlyConfig.year.toString();
+            const month = utils.formatMonth(reportConfig.monthlyConfig.month);
+            const totalDays = utils.getDays(reportConfig.monthlyConfig.month, reportConfig.monthlyConfig.year);
+            const nextMonthValue = utils.formatMonth(reportConfig.monthlyConfig.month + 1);
 
             for (let i = 1; i <= totalDays; i++) {
                 const startDate = utils.formatDate(i);
@@ -248,7 +248,7 @@ const getReport = {
         if (type === "daily") {
             reportName = segmentName + " - " + reportData.period;
         } else if (type === "monthly") {
-            reportName = segmentName + " - " + utils.getMonthName(reportConfig.month) + ", " + reportConfig.year;
+            reportName = segmentName + " - " + utils.getMonthName(reportConfig.monthlyConfig.month) + ", " + reportConfig.monthlyConfig.year;
         }
 
         const reportText = header + body;
