@@ -230,7 +230,7 @@ const getReport = {
             reportData.segments.forEach((segment) => {
                 segmentsArray.push(segment.id);
             });
-            const joinedSegmentIds = segmentsArray.join('');
+            const joinedSegmentIds = segmentsArray.join("");
             segmentName = reportData.segments[0].name + "(" + md5(joinedSegmentIds) + ")";
         } else {
             segmentName = reportData.reportSuite.name + "(" + reportData.reportSuite.id + ")";
