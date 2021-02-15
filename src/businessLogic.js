@@ -32,21 +32,21 @@ const getReport = {
             });
         });
         // get your capi schedules
-        // const getCapi = forEachAsync(requestBodies, (element) => {
-        //     getReport.checkCapi(reportConfig, element).then((capiSchedule) => {
-        //         capiSchedules.push(capiSchedule);
-        //     });
-        // }).then(() => {
-        //     return new Promise((resolve, reject) => {
-        //         resolve(capiSchedules);
-        //     });
-        // });
+        const getCapi = forEachAsync(requestBodies, (element) => {
+            getReport.checkCapi(reportConfig, element).then((capiSchedule) => {
+                capiSchedules.push(capiSchedule);
+            });
+        }).then(() => {
+            return new Promise((resolve, reject) => {
+                resolve(capiSchedules);
+            });
+        });
         // set a timeout while Adobe processes your reports
         const timeoutPromise = new Promise((resolve, reject) => {
             setTimeout(resolve, reportConfig.reportTimeout);
         });
 
-        Promise.all([queueAdobe, /*getCapi,*/ timeoutPromise]).then((values) => {
+        Promise.all([queueAdobe, getCapi, timeoutPromise]).then((values) => {
             const reportBodiesArray = values[0];
 
             forEachAsync(reportBodiesArray, (reportBody) => {
