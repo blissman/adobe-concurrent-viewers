@@ -7,8 +7,8 @@ describe("businesslogic", () => {
     beforeEach(() => {
         jest.spyOn(getReport, "requestBody");
         jest.spyOn(fs, "writeFile");
-        window.MarketingCloud = {};
-        window.MarketingCloud.makeRequest = () => {
+        MarketingCloud = {};
+        MarketingCloud.makeRequest = () => {
             return new Promise((resolve, reject) => {
                 resolve(true);
                 reject(false);

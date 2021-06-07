@@ -40,7 +40,6 @@
     },
     "jest": {
         "collectCoverage": true,
-        "coverageDirectory": "./test/coverage",
-        "testEnvironment": "jsdom"
+        "coverageDirectory": "./test/coverage"
     }
 }
