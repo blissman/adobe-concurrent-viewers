@@ -46,7 +46,7 @@ const getReport = {
                 });
             });
 
-            processes.push(getCapi)
+            processes.push(getCapi);
         }
         // set a timeout while Adobe processes your reports
         const timeoutPromise = new Promise((resolve, reject) => {
