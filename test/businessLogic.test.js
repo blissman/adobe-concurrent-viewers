@@ -5,8 +5,8 @@ const fs = require("file-system");
 describe("businesslogic", () => {
 
     beforeEach(() => {
-        spyOn(getReport, "requestBody").and.callThrough();
-        spyOn(fs, "writeFile");
+        jest.spyOn(getReport, "requestBody");
+        jest.spyOn(fs, "writeFile");
         window.MarketingCloud = {};
         window.MarketingCloud.makeRequest = () => {
             return new Promise((resolve, reject) => {
